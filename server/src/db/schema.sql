@@ -1,0 +1,19 @@
+Table users (
+  id SERIAL PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  first_name VARCHAR(20) NOT NULL,
+  last_name VARCHAR(20) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  password VARCHAR(30) NOT NULL,
+  img VARCHAR(500) DEFAULT ''
+);
+
+Table posts {
+  id SERIAL PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  title VARCHAR(240) NOT NULL,
+  description VARCHAR(500) NOT NULL,
+  img VARCHAR(500) NOT NULL
+  user_id INTEGER NOT NULL REFERENCES users(id)
+}
