@@ -1,17 +1,14 @@
-import { Pool } from 'pg';
+import { Sequelize } from 'sequelize';
 import { keys } from '../config/keys';
 
-let pool: any;
+let sequelize: Sequelize;
 
 if (process.env.NODE_ENV === 'production') {
 } else {
-  pool = new Pool({
-    user: keys.user,
+  sequelize = new Sequelize(keys.database, keys.user, keys.password, {
     host: keys.host,
-    database: keys.database,
-    password: keys.password,
-    port: keys.port,
+    dialect: 'postgres',
   });
 }
 
-export { pool };
+export { sequelize };

@@ -1,14 +1,15 @@
-import { pool } from '../db';
+import { Sequelize } from 'sequelize/types';
+import { sequelize } from '../db';
 
 class DatabaseService {
-  private static instance: DatabaseService;
+  private static instance: Sequelize;
 
   private constructor() {}
 
   static get getInstance() {
     if (!this.instance) {
       try {
-        this.instance = pool;
+        this.instance = sequelize;
       } catch (err) {
         console.error(err.message);
       }
@@ -17,4 +18,4 @@ class DatabaseService {
   }
 }
 
-export { DatabaseService };
+export { DatabaseService as sequelize };
