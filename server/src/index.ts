@@ -1,4 +1,5 @@
 import express from 'express';
+import { sequelize } from './services/DatabaseService';
 
 const app = express();
 

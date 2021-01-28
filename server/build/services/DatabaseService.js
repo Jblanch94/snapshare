@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DatabaseService = void 0;
+exports.sequelize = void 0;
 var db_1 = require("../db");
 var DatabaseService = /** @class */ (function () {
     function DatabaseService() {
@@ -9,7 +9,7 @@ var DatabaseService = /** @class */ (function () {
         get: function () {
             if (!this.instance) {
                 try {
-                    this.instance = db_1.pool;
+                    this.instance = db_1.sequelize;
                 }
                 catch (err) {
                     console.error(err.message);
@@ -22,4 +22,4 @@ var DatabaseService = /** @class */ (function () {
     });
     return DatabaseService;
 }());
-exports.DatabaseService = DatabaseService;
+exports.sequelize = DatabaseService;
