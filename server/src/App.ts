@@ -18,20 +18,19 @@ class App {
 
     try {
       associations.setupRelations();
-      db.sync();
-      associations.setupConstraints();
+      await db.sync({ alter: true });
+      await associations.setupConstraints();
+      // load in middlewares
+
+      // load in routes
+
+      // start server
+      this.app.listen(PORT, () => {
+        console.log(`Listening on port ${PORT}`);
+      });
     } catch (error) {
       console.error(error.message);
     }
-
-    // load in middlewares
-
-    // load in routes
-
-    // start server
-    this.app.listen(PORT, () => {
-      console.log(`Listening on port ${PORT}`);
-    });
   }
 }
 

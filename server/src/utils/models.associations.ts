@@ -12,19 +12,19 @@ class ModelAssociations {
     const queryInterface = this.db.getQueryInterface();
 
     try {
-      await queryInterface.addConstraint('Upvote', {
+      await queryInterface.addConstraint('upvotes', {
         type: 'unique',
         fields: ['user_id', 'post_id'],
       });
 
       // add constraint for favorites table
-      await queryInterface.addConstraint('Favorite', {
+      await queryInterface.addConstraint('favorites', {
         type: 'unique',
         fields: ['user_id', 'post_id'],
       });
 
       // add constraint for albums_posts table
-      await queryInterface.addConstraint('Albums_Posts', {
+      await queryInterface.addConstraint('albums__posts', {
         type: 'unique',
         fields: ['album_id', 'post_id'],
       });

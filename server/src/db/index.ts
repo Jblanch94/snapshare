@@ -8,6 +8,12 @@ if (process.env.NODE_ENV === 'production') {
   sequelize = new Sequelize(keys.database, keys.user, keys.password, {
     host: keys.host,
     dialect: 'postgres',
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
   });
 }
 

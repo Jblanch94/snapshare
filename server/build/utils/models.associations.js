@@ -71,14 +71,14 @@ var ModelAssociations = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 5, , 6]);
-                        return [4 /*yield*/, queryInterface.addConstraint('Upvote', {
+                        return [4 /*yield*/, queryInterface.addConstraint('upvotes', {
                                 type: 'unique',
                                 fields: ['user_id', 'post_id'],
                             })];
                     case 2:
                         _a.sent();
                         // add constraint for favorites table
-                        return [4 /*yield*/, queryInterface.addConstraint('Favorite', {
+                        return [4 /*yield*/, queryInterface.addConstraint('favorites', {
                                 type: 'unique',
                                 fields: ['user_id', 'post_id'],
                             })];
@@ -86,7 +86,7 @@ var ModelAssociations = /** @class */ (function () {
                         // add constraint for favorites table
                         _a.sent();
                         // add constraint for albums_posts table
-                        return [4 /*yield*/, queryInterface.addConstraint('Albums_Posts', {
+                        return [4 /*yield*/, queryInterface.addConstraint('albums__posts', {
                                 type: 'unique',
                                 fields: ['album_id', 'post_id'],
                             })];

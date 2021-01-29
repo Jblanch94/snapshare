@@ -49,26 +49,36 @@ var App = /** @class */ (function () {
     }
     App.prototype.start = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var PORT, db, associations;
+            var PORT, db, associations, error_1;
             return __generator(this, function (_a) {
-                PORT = process.env.PORT || 5000;
-                db = DatabaseService_1.sequelize.getInstance;
-                associations = new models_associations_1.ModelAssociations(db);
-                try {
-                    associations.setupRelations();
-                    db.sync();
-                    associations.setupConstraints();
+                switch (_a.label) {
+                    case 0:
+                        PORT = process.env.PORT || 5000;
+                        db = DatabaseService_1.sequelize.getInstance;
+                        associations = new models_associations_1.ModelAssociations(db);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        associations.setupRelations();
+                        return [4 /*yield*/, db.sync({ alter: true })];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, associations.setupConstraints()];
+                    case 3:
+                        _a.sent();
+                        // load in middlewares
+                        // load in routes
+                        // start server
+                        this.app.listen(PORT, function () {
+                            console.log("Listening on port " + PORT);
+                        });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_1 = _a.sent();
+                        console.error(error_1.message);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
-                catch (error) {
-                    console.error(error.message);
-                }
-                // load in middlewares
-                // load in routes
-                // start server
-                this.app.listen(PORT, function () {
-                    console.log("Listening on port " + PORT);
-                });
-                return [2 /*return*/];
             });
         });
     };
