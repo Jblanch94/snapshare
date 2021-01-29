@@ -15,6 +15,12 @@ const Album = db.define(
     title: {
       type: DataTypes.STRING(50),
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide a title for your album',
+        },
+        max: 50,
+      },
     },
     user_id: {
       type: DataTypes.INTEGER,

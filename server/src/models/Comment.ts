@@ -15,6 +15,11 @@ const Comment = db.define(
     contents: {
       type: DataTypes.STRING(800),
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide content for the comment',
+        },
+      },
     },
     post_id: {
       type: DataTypes.INTEGER,

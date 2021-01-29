@@ -12,6 +12,11 @@ const Tag = db.define(
     title: {
       type: DataTypes.STRING(20),
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide a name for the tag',
+        },
+      },
     },
   },
   {
