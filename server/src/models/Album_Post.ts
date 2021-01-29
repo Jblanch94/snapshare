@@ -32,4 +32,10 @@ const Album_Post = db.define(
   }
 );
 
+const queryInterface = db.getQueryInterface();
+queryInterface.addConstraint('Albums_Posts', {
+  type: 'unique',
+  fields: ['album_id', 'post_id'],
+});
+
 export { Album_Post };

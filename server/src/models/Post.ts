@@ -14,14 +14,29 @@ const Post = db.define(
     title: {
       type: DataTypes.STRING(240),
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide a title for the post',
+        },
+      },
     },
     description: {
       type: DataTypes.STRING(500),
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide a description for the post',
+        },
+      },
     },
     img: {
       type: DataTypes.STRING(500),
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please provide an image for the post',
+        },
+      },
     },
     user_id: {
       type: DataTypes.INTEGER,
