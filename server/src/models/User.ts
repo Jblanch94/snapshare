@@ -1,5 +1,5 @@
 import { sequelize } from '../services/DatabaseService';
-import { DataTypes } from 'sequelize';
+import { DataTypes, NOW } from 'sequelize';
 
 const db = sequelize.getInstance;
 
@@ -10,6 +10,11 @@ const User = db.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: NOW,
     },
     first_name: {
       type: DataTypes.STRING(20),
@@ -54,7 +59,6 @@ const User = db.define(
   },
   {
     updatedAt: false,
-    createdAt: 'created_at',
     underscored: true,
   }
 );

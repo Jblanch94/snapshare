@@ -7,6 +7,9 @@ var db = DatabaseService_1.sequelize.getInstance;
 var Tag = db.define('Tag', {
     id: {
         type: sequelize_1.DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
     },
     title: {
         type: sequelize_1.DataTypes.STRING(20),

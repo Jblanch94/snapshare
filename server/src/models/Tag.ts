@@ -8,6 +8,9 @@ const Tag = db.define(
   {
     id: {
       type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
     },
     title: {
       type: DataTypes.STRING(20),

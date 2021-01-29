@@ -1,5 +1,5 @@
 import { sequelize } from '../services/DatabaseService';
-import { DataTypes } from 'sequelize';
+import { DataTypes, NOW } from 'sequelize';
 
 const db = sequelize.getInstance;
 
@@ -11,6 +11,11 @@ const Album = db.define(
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: NOW,
     },
     title: {
       type: DataTypes.STRING(50),
@@ -34,7 +39,6 @@ const Album = db.define(
   },
   {
     updatedAt: false,
-    createdAt: 'created_at',
     underscored: true,
   }
 );

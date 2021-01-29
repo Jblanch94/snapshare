@@ -1,5 +1,5 @@
 import { sequelize } from '../services/DatabaseService';
-import { DataTypes } from 'sequelize';
+import { DataTypes, NOW } from 'sequelize';
 
 const db = sequelize.getInstance;
 
@@ -11,6 +11,16 @@ const Comment = db.define(
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: NOW,
     },
     contents: {
       type: DataTypes.STRING(800),
@@ -42,8 +52,6 @@ const Comment = db.define(
   },
   {
     underscored: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
   }
 );
 

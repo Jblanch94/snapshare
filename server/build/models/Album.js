@@ -11,6 +11,11 @@ var Album = db.define('Album', {
         autoIncrement: true,
         allowNull: false,
     },
+    created_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
     title: {
         type: sequelize_1.DataTypes.STRING(50),
         allowNull: false,
@@ -26,7 +31,6 @@ var Album = db.define('Album', {
     },
 }, {
     updatedAt: false,
-    createdAt: 'created_at',
     underscored: true,
 });
 exports.Album = Album;

@@ -14,6 +14,11 @@ var Album_Post = db.define('Albums_Posts', {
         onDelete: 'CASCADE',
         primaryKey: false,
     },
+    created_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
     album_id: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: false,
@@ -26,6 +31,5 @@ var Album_Post = db.define('Albums_Posts', {
 }, {
     underscored: true,
     updatedAt: false,
-    createdAt: 'created_at',
 });
 exports.Album_Post = Album_Post;

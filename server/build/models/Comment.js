@@ -11,6 +11,16 @@ var Comment = db.define('Comment', {
         autoIncrement: true,
         allowNull: false,
     },
+    created_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
+    updated_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
     contents: {
         type: sequelize_1.DataTypes.STRING(800),
         allowNull: false,
@@ -35,7 +45,5 @@ var Comment = db.define('Comment', {
     },
 }, {
     underscored: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
 });
 exports.Comment = Comment;

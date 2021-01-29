@@ -10,6 +10,16 @@ var Post = db.define('Post', {
         primaryKey: true,
         autoIncrement: true,
     },
+    created_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
+    updated_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
     title: {
         type: sequelize_1.DataTypes.STRING(240),
         allowNull: false,
@@ -32,8 +42,6 @@ var Post = db.define('Post', {
         onDelete: 'CASCADE',
     },
 }, {
-    updatedAt: 'updated_at',
-    createdAt: 'created_at',
     underscored: true,
 });
 exports.Post = Post;

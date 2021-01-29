@@ -1,5 +1,5 @@
 import { sequelize } from '../services/DatabaseService';
-import { DataTypes } from 'sequelize';
+import { DataTypes, NOW } from 'sequelize';
 
 const db = sequelize.getInstance;
 
@@ -12,8 +12,14 @@ const Album_Post = db.define(
         model: 'Post',
         key: 'id',
       },
+
       onDelete: 'CASCADE',
       primaryKey: false,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: NOW,
     },
     album_id: {
       type: DataTypes.INTEGER,
@@ -28,7 +34,6 @@ const Album_Post = db.define(
   {
     underscored: true,
     updatedAt: false,
-    createdAt: 'created_at',
   }
 );
 
