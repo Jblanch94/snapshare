@@ -14,6 +14,11 @@ var Favorite = db.define('Favorite', {
         onDelete: 'CASCADE',
         primaryKey: false,
     },
+    created_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,
         references: {
@@ -25,7 +30,6 @@ var Favorite = db.define('Favorite', {
     },
 }, {
     updatedAt: false,
-    createdAt: 'created_at',
     underscored: true,
 });
 exports.Favorite = Favorite;

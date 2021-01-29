@@ -10,6 +10,11 @@ var User = db.define('User', {
         primaryKey: true,
         autoIncrement: true,
     },
+    created_at: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize_1.NOW,
+    },
     first_name: {
         type: sequelize_1.DataTypes.STRING(20),
         allowNull: false,
@@ -33,7 +38,6 @@ var User = db.define('User', {
     },
 }, {
     updatedAt: false,
-    createdAt: 'created_at',
     underscored: true,
 });
 exports.User = User;

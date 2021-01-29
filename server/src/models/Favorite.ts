@@ -1,5 +1,5 @@
 import { sequelize } from '../services/DatabaseService';
-import { DataTypes } from 'sequelize';
+import { DataTypes, NOW } from 'sequelize';
 
 const db = sequelize.getInstance;
 
@@ -15,6 +15,11 @@ const Favorite = db.define(
       onDelete: 'CASCADE',
       primaryKey: false,
     },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: NOW,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -27,7 +32,6 @@ const Favorite = db.define(
   },
   {
     updatedAt: false,
-    createdAt: 'created_at',
     underscored: true,
   }
 );
