@@ -24,6 +24,11 @@ var Comment = db.define('Comment', {
     contents: {
         type: sequelize_1.DataTypes.STRING(800),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please provide content for the comment',
+            },
+        },
     },
     post_id: {
         type: sequelize_1.DataTypes.INTEGER,

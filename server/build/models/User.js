@@ -18,19 +18,37 @@ var User = db.define('User', {
     first_name: {
         type: sequelize_1.DataTypes.STRING(20),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'You need to provide your first name',
+            },
+        },
     },
     last_name: {
         type: sequelize_1.DataTypes.STRING(20),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'You need to provide your last name',
+            },
+        },
     },
     email: {
         type: sequelize_1.DataTypes.STRING(50),
         allowNull: false,
         unique: true,
+        validate: {
+            isEmail: {
+                msg: 'You need to provide a valid email',
+            },
+        },
     },
     password: {
         type: sequelize_1.DataTypes.STRING(100),
         allowNull: false,
+        validate: {
+            is: '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|]).{6}$',
+        },
     },
     img: {
         type: sequelize_1.DataTypes.STRING(500),
@@ -41,3 +59,6 @@ var User = db.define('User', {
     underscored: true,
 });
 exports.User = User;
+User.addHook('beforeCreate', function (user, options) {
+    // logic to hash the password
+});

@@ -32,10 +32,4 @@ const Upvote = db.define(
   }
 );
 
-const queryInterface = db.getQueryInterface();
-queryInterface.addConstraint('Upvote', {
-  type: 'unique',
-  fields: ['user_id', 'post_id'],
-});
-
 export { Upvote };

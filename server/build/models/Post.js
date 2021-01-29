@@ -23,14 +23,29 @@ var Post = db.define('Post', {
     title: {
         type: sequelize_1.DataTypes.STRING(240),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please provide a title for the post',
+            },
+        },
     },
     description: {
         type: sequelize_1.DataTypes.STRING(500),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please provide a description for the post',
+            },
+        },
     },
     img: {
         type: sequelize_1.DataTypes.STRING(500),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please provide an image for the post',
+            },
+        },
     },
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,

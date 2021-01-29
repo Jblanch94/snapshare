@@ -36,10 +36,4 @@ const Favorite = db.define(
   }
 );
 
-const queryInterface = db.getQueryInterface();
-queryInterface.addConstraint('Favorite', {
-  type: 'unique',
-  fields: ['user_id', 'post_id'],
-});
-
 export { Favorite };

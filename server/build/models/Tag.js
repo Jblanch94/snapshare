@@ -14,6 +14,11 @@ var Tag = db.define('Tag', {
     title: {
         type: sequelize_1.DataTypes.STRING(20),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please provide a name for the tag',
+            },
+        },
     },
 }, {
     createdAt: false,

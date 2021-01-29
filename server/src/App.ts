@@ -8,14 +8,21 @@ class App {
     this.app = express();
   }
 
-  start(): void {
+  async start(): Promise<void> {
     const PORT = process.env.PORT || 5000;
 
     const db = sequelize.getInstance;
 
     // Create models and relationships
-    new ModelAssociations(db).setupRelations();
-    db.sync({ force: true });
+    const associations = new ModelAssociations(db);
+
+    try {
+      associations.setupRelations();
+      db.sync();
+      associations.setupConstraints();
+    } catch (error) {
+      console.error(error.message);
+    }
 
     // load in middlewares
 

@@ -7,7 +7,34 @@ class ModelAssociations {
     this.db = db;
   }
 
-  setupRelations() {
+  async setupConstraints(): Promise<void> {
+    // add constraint for Upvote table
+    const queryInterface = this.db.getQueryInterface();
+
+    try {
+      await queryInterface.addConstraint('Upvote', {
+        type: 'unique',
+        fields: ['user_id', 'post_id'],
+      });
+
+      // add constraint for favorites table
+      await queryInterface.addConstraint('Favorite', {
+        type: 'unique',
+        fields: ['user_id', 'post_id'],
+      });
+
+      // add constraint for albums_posts table
+      await queryInterface.addConstraint('Albums_Posts', {
+        type: 'unique',
+        fields: ['album_id', 'post_id'],
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  setupRelations(): void {
+    console.log(models.Post_Tag);
     // Create relation between User and Post Model
     models.User.hasMany(models.Post);
     models.Post.belongsTo(models.User, { foreignKey: 'user_id' });
@@ -21,6 +48,8 @@ class ModelAssociations {
       through: models.Post_Tag,
       foreignKey: 'tag_id',
     });
+    models.Post_Tag.belongsTo(models.Post);
+    models.Post_Tag.belongsTo(models.Tag);
 
     // Create relation between favorites, user and post models
     models.User.belongsToMany(models.Post, {
@@ -31,6 +60,8 @@ class ModelAssociations {
       through: models.Favorite,
       foreignKey: 'post_id',
     });
+    models.Favorite.belongsTo(models.User);
+    models.Favorite.belongsTo(models.Post);
 
     // Create relation between comments, user and post models
     models.User.hasMany(models.Comment, { foreignKey: 'user_id' });
@@ -52,6 +83,8 @@ class ModelAssociations {
       through: models.Album_Post,
       foreignKey: 'post_id',
     });
+    models.Album_Post.belongsTo(models.Album);
+    models.Album_Post.belongsTo(models.Post);
 
     // Create relation between user, post and upvotes
     models.User.belongsToMany(models.Post, {
@@ -62,6 +95,8 @@ class ModelAssociations {
       through: models.Upvote,
       foreignKey: 'post_id',
     });
+    models.Upvote.belongsTo(models.Post);
+    models.Upvote.belongsTo(models.User);
   }
 }
 

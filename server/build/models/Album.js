@@ -19,6 +19,12 @@ var Album = db.define('Album', {
     title: {
         type: sequelize_1.DataTypes.STRING(50),
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please provide a title for your album',
+            },
+            max: 50,
+        },
     },
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,
