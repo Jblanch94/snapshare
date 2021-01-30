@@ -4,7 +4,7 @@ exports.Album_Post = void 0;
 var DatabaseService_1 = require("../services/DatabaseService");
 var sequelize_1 = require("sequelize");
 var db = DatabaseService_1.sequelize.getInstance;
-var Album_Post = db.define('Albums_Posts', {
+var Album_Post = db.define('AlbumsPosts', {
     post_id: {
         type: sequelize_1.DataTypes.INTEGER,
         references: {

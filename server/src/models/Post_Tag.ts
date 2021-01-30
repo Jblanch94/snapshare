@@ -4,7 +4,7 @@ import { DataTypes } from 'sequelize';
 const db = sequelize.getInstance;
 
 const Post_Tag = db.define(
-  'Posts_Tags',
+  'PostsTags',
   {
     post_id: {
       type: DataTypes.INTEGER,

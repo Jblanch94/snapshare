@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 var express_1 = __importDefault(require("express"));
 var DatabaseService_1 = require("./services/DatabaseService");
-var models_associations_1 = require("./utils/models.associations");
+var models_associations_1 = require("./models/models.associations");
 var App = /** @class */ (function () {
     function App() {
         this.app = express_1.default();
@@ -55,16 +55,13 @@ var App = /** @class */ (function () {
                     case 0:
                         PORT = process.env.PORT || 5000;
                         db = DatabaseService_1.sequelize.getInstance;
-                        associations = new models_associations_1.ModelAssociations(db);
+                        associations = new models_associations_1.Associations(db);
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 4, , 5]);
+                        _a.trys.push([1, 3, , 4]);
                         associations.setupRelations();
-                        return [4 /*yield*/, db.sync({ alter: true })];
+                        return [4 /*yield*/, db.sync()];
                     case 2:
-                        _a.sent();
-                        return [4 /*yield*/, associations.setupConstraints()];
-                    case 3:
                         _a.sent();
                         // load in middlewares
                         // load in routes
@@ -72,12 +69,12 @@ var App = /** @class */ (function () {
                         this.app.listen(PORT, function () {
                             console.log("Listening on port " + PORT);
                         });
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 4];
+                    case 3:
                         error_1 = _a.sent();
                         console.error(error_1.message);
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

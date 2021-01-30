@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import { sequelize } from './services/DatabaseService';
-import { ModelAssociations } from './utils/models.associations';
+import { Associations } from './models/models.associations';
 
 class App {
   app: Express;
@@ -14,12 +14,12 @@ class App {
     const db = sequelize.getInstance;
 
     // Create models and relationships
-    const associations = new ModelAssociations(db);
+    const associations = new Associations(db);
 
     try {
       associations.setupRelations();
-      await db.sync({ alter: true });
-      await associations.setupConstraints();
+      await db.sync();
+
       // load in middlewares
 
       // load in routes

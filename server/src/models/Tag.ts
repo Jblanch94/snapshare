@@ -25,6 +25,7 @@ const Tag = db.define(
   {
     createdAt: false,
     updatedAt: false,
+    underscored: true,
   }
 );
 

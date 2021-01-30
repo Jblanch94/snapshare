@@ -1,3 +1,5 @@
+import { sequelize } from '../db';
+
 export { User } from './User';
 export { Post } from './Post';
 export { Tag } from './Tag';

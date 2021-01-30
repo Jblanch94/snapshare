@@ -4,7 +4,7 @@ import { DataTypes, NOW } from 'sequelize';
 const db = sequelize.getInstance;
 
 const Album_Post = db.define(
-  'Albums_Posts',
+  'AlbumsPosts',
   {
     post_id: {
       type: DataTypes.INTEGER,

@@ -23,5 +23,6 @@ var Tag = db.define('Tag', {
 }, {
     createdAt: false,
     updatedAt: false,
+    underscored: true,
 });
 exports.Tag = Tag;
