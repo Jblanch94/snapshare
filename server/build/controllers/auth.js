@@ -35,90 +35,58 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
-var DatabaseService_1 = require("../services/DatabaseService");
-var sequelize_1 = require("sequelize");
-var bcrypt_1 = __importDefault(require("bcrypt"));
-var db = DatabaseService_1.sequelize.getInstance;
-var User = db.define('User', {
-    id: {
-        type: sequelize_1.DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    created_at: {
-        type: sequelize_1.DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize_1.NOW,
-    },
-    first_name: {
-        type: sequelize_1.DataTypes.STRING(20),
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: 'You need to provide your first name',
-            },
-        },
-    },
-    last_name: {
-        type: sequelize_1.DataTypes.STRING(20),
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: 'You need to provide your last name',
-            },
-        },
-    },
-    email: {
-        type: sequelize_1.DataTypes.STRING(50),
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: {
-                msg: 'You need to provide a valid email',
-            },
-        },
-    },
-    password: {
-        type: sequelize_1.DataTypes.STRING(100),
-        allowNull: false,
-        validate: {
-            min: 6,
-            max: 100,
-        },
-    },
-    img: {
-        type: sequelize_1.DataTypes.STRING(500),
-        defaultValue: '',
-    },
-}, {
-    updatedAt: false,
-    underscored: true,
-    hooks: {
-        beforeCreate: function (user) { return __awaiter(void 0, void 0, void 0, function () {
-            var password, hashedPassword, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+exports.AuthController = void 0;
+var user_1 = require("../services/user");
+var jwtGenerator_1 = require("../utils/jwtGenerator");
+var AuthController = /** @class */ (function () {
+    function AuthController() {
+        var _this = this;
+        this.registerUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, first_name, last_name, email, password, img, user, dataValues, token, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        password = user.getDataValue('password');
-                        return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
+                        _a = req.body, first_name = _a.first_name, last_name = _a.last_name, email = _a.email, password = _a.password, img = _a.img;
+                        // the only param not required is img, but if provided works as well
+                        if (!first_name || !last_name || !email || !password) {
+                            return [2 /*return*/, res.status(400).json('Missing registration information')];
+                        }
+                        _b.label = 1;
                     case 1:
-                        hashedPassword = _a.sent();
-                        user.password = hashedPassword;
-                        return [3 /*break*/, 3];
+                        _b.trys.push([1, 4, , 5]);
+                        return [4 /*yield*/, this.userService.fetchUserByEmail(email)];
                     case 2:
-                        err_1 = _a.sent();
+                        user = _b.sent();
+                        if (user) {
+                            return [2 /*return*/, res.status(400).json('Email already exists!')];
+                        }
+                        return [4 /*yield*/, this.userService.registerUser({
+                                first_name: first_name,
+                                last_name: last_name,
+                                email: email,
+                                password: password,
+                            })];
+                    case 3:
+                        dataValues = (_b.sent()).dataValues;
+                        console.log(dataValues);
+                        token = jwtGenerator_1.jwtGenerator({ user_id: dataValues.id }, 60 * 10);
+                        // send back access token in response and refresh token in cookie
+                        res.cookie('refreshToken', jwtGenerator_1.jwtGenerator({ user_id: dataValues.id }, 60 * 15), { httpOnly: true });
+                        // send back token to user
+                        res.status(201).json({ accessToken: token });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_1 = _b.sent();
                         console.error(err_1.message);
-                        return [2 /*return*/, err_1];
-                    case 3: return [2 /*return*/];
+                        res.status(500).send(err_1.message);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
-        }); },
-    },
-});
-exports.User = User;
+        }); };
+        this.userService = new user_1.UserService();
+    }
+    return AuthController;
+}());
+exports.AuthController = AuthController;

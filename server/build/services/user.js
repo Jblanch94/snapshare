@@ -35,90 +35,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
-var DatabaseService_1 = require("../services/DatabaseService");
-var sequelize_1 = require("sequelize");
-var bcrypt_1 = __importDefault(require("bcrypt"));
-var db = DatabaseService_1.sequelize.getInstance;
-var User = db.define('User', {
-    id: {
-        type: sequelize_1.DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    created_at: {
-        type: sequelize_1.DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize_1.NOW,
-    },
-    first_name: {
-        type: sequelize_1.DataTypes.STRING(20),
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: 'You need to provide your first name',
-            },
-        },
-    },
-    last_name: {
-        type: sequelize_1.DataTypes.STRING(20),
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: 'You need to provide your last name',
-            },
-        },
-    },
-    email: {
-        type: sequelize_1.DataTypes.STRING(50),
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: {
-                msg: 'You need to provide a valid email',
-            },
-        },
-    },
-    password: {
-        type: sequelize_1.DataTypes.STRING(100),
-        allowNull: false,
-        validate: {
-            min: 6,
-            max: 100,
-        },
-    },
-    img: {
-        type: sequelize_1.DataTypes.STRING(500),
-        defaultValue: '',
-    },
-}, {
-    updatedAt: false,
-    underscored: true,
-    hooks: {
-        beforeCreate: function (user) { return __awaiter(void 0, void 0, void 0, function () {
-            var password, hashedPassword, err_1;
+exports.UserService = void 0;
+var User_1 = require("../models/User");
+var UserService = /** @class */ (function () {
+    function UserService() {
+    }
+    // retrieve user by email
+    UserService.prototype.fetchUserByEmail = function (email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        password = user.getDataValue('password');
-                        return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
+                        return [4 /*yield*/, User_1.User.findOne({
+                                where: {
+                                    email: email,
+                                },
+                            })];
                     case 1:
-                        hashedPassword = _a.sent();
-                        user.password = hashedPassword;
-                        return [3 /*break*/, 3];
+                        user = _a.sent();
+                        return [2 /*return*/, user];
                     case 2:
                         err_1 = _a.sent();
-                        console.error(err_1.message);
                         return [2 /*return*/, err_1];
                     case 3: return [2 /*return*/];
                 }
             });
-        }); },
-    },
-});
-exports.User = User;
+        });
+    };
+    // register new user
+    UserService.prototype.registerUser = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, User_1.User.create(data)];
+                    case 1:
+                        user = _a.sent();
+                        return [2 /*return*/, user];
+                    case 2:
+                        err_2 = _a.sent();
+                        return [2 /*return*/, err_2];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return UserService;
+}());
+exports.UserService = UserService;

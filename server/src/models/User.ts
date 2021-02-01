@@ -1,5 +1,6 @@
 import { sequelize } from '../services/DatabaseService';
 import { DataTypes, NOW } from 'sequelize';
+import bcrypt from 'bcrypt';
 
 const db = sequelize.getInstance;
 
@@ -48,8 +49,8 @@ const User = db.define(
       type: DataTypes.STRING(100),
       allowNull: false,
       validate: {
-        is:
-          '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|]).{6}$',
+        min: 6,
+        max: 100,
       },
     },
     img: {
@@ -60,11 +61,19 @@ const User = db.define(
   {
     updatedAt: false,
     underscored: true,
+    hooks: {
+      beforeCreate: async (user: any) => {
+        try {
+          const password = user.getDataValue('password');
+          const hashedPassword = await bcrypt.hash(password, 10);
+          user.password = hashedPassword;
+        } catch (err) {
+          console.error(err.message);
+          return err;
+        }
+      },
+    },
   }
 );
-
-User.addHook('beforeCreate', (user, options) => {
-  // logic to hash the password
-});
 
 export { User };

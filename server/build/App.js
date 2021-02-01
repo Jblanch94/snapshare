@@ -43,39 +43,35 @@ exports.App = void 0;
 var express_1 = __importDefault(require("express"));
 var DatabaseService_1 = require("./services/DatabaseService");
 var models_associations_1 = require("./models/models.associations");
+var auth_1 = require("./routes/auth");
 var App = /** @class */ (function () {
     function App() {
         this.app = express_1.default();
     }
     App.prototype.start = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var PORT, db, associations, error_1;
+            var PORT, db, associations, url;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        PORT = process.env.PORT || 5000;
-                        db = DatabaseService_1.sequelize.getInstance;
-                        associations = new models_associations_1.Associations(db);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        associations.setupRelations();
-                        return [4 /*yield*/, db.sync()];
-                    case 2:
-                        _a.sent();
-                        // load in middlewares
-                        // load in routes
-                        // start server
-                        this.app.listen(PORT, function () {
-                            console.log("Listening on port " + PORT);
-                        });
-                        return [3 /*break*/, 4];
-                    case 3:
-                        error_1 = _a.sent();
-                        console.error(error_1.message);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                PORT = process.env.PORT || 5000;
+                db = DatabaseService_1.sequelize.getInstance;
+                associations = new models_associations_1.Associations(db);
+                url = '/snapshare/api';
+                try {
+                    associations.setupRelations();
+                    // await db.sync();
+                    // load in middlewares
+                    this.app.use(express_1.default.json());
+                    // load in routes
+                    this.app.use(url + "/auth", auth_1.router);
+                    // start server
+                    this.app.listen(PORT, function () {
+                        console.log("Listening on port " + PORT);
+                    });
                 }
+                catch (error) {
+                    console.error(error.message);
+                }
+                return [2 /*return*/];
             });
         });
     };

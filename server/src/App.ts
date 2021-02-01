@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import { sequelize } from './services/DatabaseService';
 import { Associations } from './models/models.associations';
+import { router as authRoutes } from './routes/auth';
 
 class App {
   app: Express;
@@ -15,14 +16,17 @@ class App {
 
     // Create models and relationships
     const associations = new Associations(db);
+    const url = '/snapshare/api';
 
     try {
       associations.setupRelations();
-      await db.sync();
+      // await db.sync();
 
       // load in middlewares
+      this.app.use(express.json());
 
       // load in routes
+      this.app.use(`${url}/auth`, authRoutes);
 
       // start server
       this.app.listen(PORT, () => {
