@@ -1,7 +1,7 @@
-import express, { Express } from 'express';
-import { sequelize } from './services/DatabaseService';
-import { Associations } from './models/models.associations';
-import { router as authRoutes } from './routes/auth';
+import express, { Express } from "express";
+import { sequelize } from "./services/DatabaseService";
+import { Associations } from "./models/models.associations";
+import { router as authRoutes } from "./routes/auth";
 
 class App {
   app: Express;
@@ -16,7 +16,7 @@ class App {
 
     // Create models and relationships
     const associations = new Associations(db);
-    const url = '/snapshare/api';
+    const url = "/snapshare/api";
 
     try {
       associations.setupRelations();
