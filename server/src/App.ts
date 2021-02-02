@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import cookieParser from "cookie-parser";
 import { sequelize } from "./services/DatabaseService";
 import { Associations } from "./models/models.associations";
 import { router as authRoutes } from "./routes/auth";
@@ -24,6 +25,7 @@ class App {
 
       // load in middlewares
       this.app.use(express.json());
+      this.app.use(cookieParser());
 
       // load in routes
       this.app.use(`${url}/auth`, authRoutes);

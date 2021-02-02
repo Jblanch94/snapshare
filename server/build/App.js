@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 var express_1 = __importDefault(require("express"));
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var DatabaseService_1 = require("./services/DatabaseService");
 var models_associations_1 = require("./models/models.associations");
 var auth_1 = require("./routes/auth");
@@ -61,6 +62,7 @@ var App = /** @class */ (function () {
                     // await db.sync();
                     // load in middlewares
                     this.app.use(express_1.default.json());
+                    this.app.use(cookie_parser_1.default());
                     // load in routes
                     this.app.use(url + "/auth", auth_1.router);
                     // start server
