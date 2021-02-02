@@ -8,4 +8,9 @@ router.post("/register", authController.registerUser);
 
 router.post("/login", authController.loginUser);
 
+//TODO: IMPLEMENT THESE ROUTES
+router.get("/is-authenticated");
+
+router.get("/refresh-token");
+
 export { router };
