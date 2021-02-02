@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/user";
 import { jwtGenerator } from "../utils/jwtGenerator";
+import { decodeToken } from "../utils/validToken";
 
 export class AuthController {
   userService: UserService;
@@ -51,7 +52,7 @@ export class AuthController {
     }
   };
 
-  // Contorller for logging in a user
+  // Controller for logging in a user
   loginUser = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
@@ -80,6 +81,42 @@ export class AuthController {
       res.json({ accessToken: token });
     } catch (err) {
       res.status(500).json(err.message);
+    }
+  };
+
+  // Controller for the checking the authentication status of a user
+  isAuthenticated = (req: any, res: Response) => {
+    try {
+      if (!req.user) {
+        return res.status(403).json("Not Authenticated");
+      }
+
+      res.json({ authenticated: true });
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  };
+
+  // Controller for sending a refresh token
+  refreshToken = (req: Request, res: Response) => {
+    const { refreshToken } = req.cookies;
+
+    // call function to verify the token is valid
+    try {
+      const { user_id } = decodeToken(refreshToken);
+
+      if (!user_id) {
+        throw { message: "Not Authenticated" };
+      }
+
+      const token = jwtGenerator({ user_id }, 60 * 10);
+      res.cookie("refreshToken", jwtGenerator({ user_id }, 60 * 15), {
+        httpOnly: true,
+        expires: new Date(Date.now() + 60 * 15 * 1000),
+      });
+      res.json({ accessToken: token });
+    } catch (err) {
+      res.status(500).send(err.message);
     }
   };
 }

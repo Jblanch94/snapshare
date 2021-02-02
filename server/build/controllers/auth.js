@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 var user_1 = require("../services/user");
 var jwtGenerator_1 = require("../utils/jwtGenerator");
+var validToken_1 = require("../utils/validToken");
 var AuthController = /** @class */ (function () {
     function AuthController() {
         var _this = this;
@@ -84,7 +85,7 @@ var AuthController = /** @class */ (function () {
                 }
             });
         }); };
-        // Contorller for logging in a user
+        // Controller for logging in a user
         this.loginUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
             var _a, email, password, user, id, token, err_2;
             return __generator(this, function (_b) {
@@ -120,6 +121,38 @@ var AuthController = /** @class */ (function () {
                 }
             });
         }); };
+        // Controller for the checking the authentication status of a user
+        this.isAuthenticated = function (req, res) {
+            try {
+                if (!req.user) {
+                    return res.status(403).json("Not Authenticated");
+                }
+                res.json({ authenticated: true });
+            }
+            catch (err) {
+                res.status(500).json(err.message);
+            }
+        };
+        // Controller for sending a refresh token
+        this.refreshToken = function (req, res) {
+            var refreshToken = req.cookies.refreshToken;
+            // call function to verify the token is valid
+            try {
+                var user_id = validToken_1.decodeToken(refreshToken).user_id;
+                if (!user_id) {
+                    throw { message: "Not Authenticated" };
+                }
+                var token = jwtGenerator_1.jwtGenerator({ user_id: user_id }, 60 * 10);
+                res.cookie("refreshToken", jwtGenerator_1.jwtGenerator({ user_id: user_id }, 60 * 15), {
+                    httpOnly: true,
+                    expires: new Date(Date.now() + 60 * 15 * 1000),
+                });
+                res.json({ accessToken: token });
+            }
+            catch (err) {
+                res.status(500).send(err.message);
+            }
+        };
         this.userService = new user_1.UserService();
     }
     return AuthController;
