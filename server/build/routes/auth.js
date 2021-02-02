@@ -6,4 +6,5 @@ var auth_1 = require("../controllers/auth");
 var router = express_1.Router();
 exports.router = router;
 var authController = new auth_1.AuthController();
-router.post('/register', authController.registerUser);
+router.post("/register", authController.registerUser);
+router.post("/login", authController.loginUser);

@@ -55,7 +55,7 @@ var App = /** @class */ (function () {
                 PORT = process.env.PORT || 5000;
                 db = DatabaseService_1.sequelize.getInstance;
                 associations = new models_associations_1.Associations(db);
-                url = '/snapshare/api';
+                url = "/snapshare/api";
                 try {
                     associations.setupRelations();
                     // await db.sync();
