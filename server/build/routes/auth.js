@@ -7,8 +7,11 @@ var authorization_1 = require("../middleware/authorization");
 var router = express_1.Router();
 exports.router = router;
 var authController = new auth_1.AuthController();
+// route for registering a user
 router.post("/register", authController.registerUser);
+// route for logging a user in
 router.post("/login", authController.loginUser);
-//TODO: IMPLEMENT THESE ROUTES
+// route for checking the authentication status of a user
 router.get("/is-authenticated", authorization_1.authorization, authController.isAuthenticated);
+// route for getting new tokens to persist authentication
 router.get("/refresh-token", authController.refreshToken);

@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import { sequelize } from "./services/DatabaseService";
 import { Associations } from "./models/models.associations";
 import { router as authRoutes } from "./routes/auth";
+import { router as userRoutes } from "./routes/user";
 
 class App {
   app: Express;
@@ -29,6 +30,7 @@ class App {
 
       // load in routes
       this.app.use(`${url}/auth`, authRoutes);
+      this.app.use(`${url}/user`, userRoutes);
 
       // start server
       this.app.listen(PORT, () => {

@@ -30,6 +30,37 @@ export class UserService {
     }
   }
 
+  // retrive a user by id
+  async fetchUserById(id: number) {
+    try {
+      const user = await User.findOne({
+        where: {
+          id: id,
+        },
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+      return user;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  // delete a user by id
+  async deleteUserById(id: number) {
+    try {
+      const deletedUser = await User.destroy({
+        where: {
+          id: id,
+        },
+      });
+      return deletedUser;
+    } catch (err) {
+      return err;
+    }
+  }
+
   // register new user
   async registerUser(data: UserRegisterData) {
     try {

@@ -69,15 +69,22 @@ var UserService = /** @class */ (function () {
             });
         });
     };
-    // register new user
-    UserService.prototype.registerUser = function (data) {
+    // retrive a user by id
+    UserService.prototype.fetchUserById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var user, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, User_1.User.create(data)];
+                        return [4 /*yield*/, User_1.User.findOne({
+                                where: {
+                                    id: id,
+                                },
+                                attributes: {
+                                    exclude: ["password"],
+                                },
+                            })];
                     case 1:
                         user = _a.sent();
                         return [2 /*return*/, user];
@@ -89,9 +96,53 @@ var UserService = /** @class */ (function () {
             });
         });
     };
+    // delete a user by id
+    UserService.prototype.deleteUserById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var deletedUser, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, User_1.User.destroy({
+                                where: {
+                                    id: id,
+                                },
+                            })];
+                    case 1:
+                        deletedUser = _a.sent();
+                        return [2 /*return*/, deletedUser];
+                    case 2:
+                        err_3 = _a.sent();
+                        return [2 /*return*/, err_3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // register new user
+    UserService.prototype.registerUser = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, User_1.User.create(data)];
+                    case 1:
+                        user = _a.sent();
+                        return [2 /*return*/, user];
+                    case 2:
+                        err_4 = _a.sent();
+                        return [2 /*return*/, err_4];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     UserService.prototype.loginUser = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var userByEmail, validPassword, err_3;
+            var userByEmail, validPassword, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -111,8 +162,8 @@ var UserService = /** @class */ (function () {
                         }
                         return [2 /*return*/, userByEmail];
                     case 3:
-                        err_3 = _a.sent();
-                        return [2 /*return*/, err_3];
+                        err_5 = _a.sent();
+                        return [2 /*return*/, err_5];
                     case 4: return [2 /*return*/];
                 }
             });

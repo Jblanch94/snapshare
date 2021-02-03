@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { Response, NextFunction } from "express";
 import { decodeToken } from "../utils/validToken";
 

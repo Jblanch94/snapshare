@@ -35,50 +35,61 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.App = void 0;
-var express_1 = __importDefault(require("express"));
-var cookie_parser_1 = __importDefault(require("cookie-parser"));
-var DatabaseService_1 = require("./services/DatabaseService");
-var models_associations_1 = require("./models/models.associations");
-var auth_1 = require("./routes/auth");
-var user_1 = require("./routes/user");
-var App = /** @class */ (function () {
-    function App() {
-        this.app = express_1.default();
-    }
-    App.prototype.start = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var PORT, db, associations, url;
+exports.UserController = void 0;
+var user_1 = require("../services/user");
+var UserController = /** @class */ (function () {
+    function UserController() {
+        var _this = this;
+        this.fetchUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var user, err_1;
             return __generator(this, function (_a) {
-                PORT = process.env.PORT || 5000;
-                db = DatabaseService_1.sequelize.getInstance;
-                associations = new models_associations_1.Associations(db);
-                url = "/snapshare/api";
-                try {
-                    associations.setupRelations();
-                    // await db.sync();
-                    // load in middlewares
-                    this.app.use(express_1.default.json());
-                    this.app.use(cookie_parser_1.default());
-                    // load in routes
-                    this.app.use(url + "/auth", auth_1.router);
-                    this.app.use(url + "/user", user_1.router);
-                    // start server
-                    this.app.listen(PORT, function () {
-                        console.log("Listening on port " + PORT);
-                    });
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        if (!req.user) {
+                            return [2 /*return*/, res.status(401).json("Not Authenticated")];
+                        }
+                        return [4 /*yield*/, this.userService.fetchUserById(req.user.user_id)];
+                    case 1:
+                        user = _a.sent();
+                        res.json(user);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_1 = _a.sent();
+                        console.error(err_1.message);
+                        res.status(500).send("Server Error");
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
-                catch (error) {
-                    console.error(error.message);
-                }
-                return [2 /*return*/];
             });
-        });
-    };
-    return App;
+        }); };
+        this.deleteUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var deletedUser, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        if (!req.user) {
+                            return [2 /*return*/, res.status(401).json("Not Authenticated")];
+                        }
+                        return [4 /*yield*/, this.userService.deleteUserById(req.user.user_id)];
+                    case 1:
+                        deletedUser = _a.sent();
+                        console.log(deletedUser);
+                        res.json("Your profile has been deleted!");
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_2 = _a.sent();
+                        console.error(err_2.message);
+                        res.status(500).json("Server Error");
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
+        this.userService = new user_1.UserService();
+    }
+    return UserController;
 }());
-exports.App = App;
+exports.UserController = UserController;
