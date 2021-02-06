@@ -44,8 +44,10 @@ var express_1 = __importDefault(require("express"));
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var DatabaseService_1 = require("./services/DatabaseService");
 var models_associations_1 = require("./models/models.associations");
+var cloudinary_1 = require("./cloudinary");
 var auth_1 = require("./routes/auth");
 var user_1 = require("./routes/user");
+var post_1 = require("./routes/post");
 var App = /** @class */ (function () {
     function App() {
         this.app = express_1.default();
@@ -57,16 +59,19 @@ var App = /** @class */ (function () {
                 PORT = process.env.PORT || 5000;
                 db = DatabaseService_1.sequelize.getInstance;
                 associations = new models_associations_1.Associations(db);
-                url = "/snapshare/api";
+                url = '/snapshare/api';
                 try {
                     associations.setupRelations();
                     // await db.sync();
                     // load in middlewares
                     this.app.use(express_1.default.json());
                     this.app.use(cookie_parser_1.default());
+                    // set up config for cloudinary
+                    cloudinary_1.setupCloudinaryConfig();
                     // load in routes
                     this.app.use(url + "/auth", auth_1.router);
                     this.app.use(url + "/user", user_1.router);
+                    this.app.use(url + "/post", post_1.router);
                     // start server
                     this.app.listen(PORT, function () {
                         console.log("Listening on port " + PORT);

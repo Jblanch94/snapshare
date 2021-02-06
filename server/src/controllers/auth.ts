@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { UserService } from "../services/user";
-import { jwtGenerator } from "../utils/jwtGenerator";
-import { decodeToken } from "../utils/validToken";
+import { Request, Response } from 'express';
+import { UserService } from '../services/user';
+import { jwtGenerator } from '../utils/jwtGenerator';
+import { decodeToken } from '../utils/validToken';
 
 export class AuthController {
   userService: UserService;
@@ -16,14 +16,14 @@ export class AuthController {
 
     // the only param not required is img, but if provided works as well
     if (!first_name || !last_name || !email || !password) {
-      return res.status(400).json("Missing registration information");
+      return res.status(400).json('Missing registration information');
     }
 
     try {
       // fetch user by email and respond if email already exists
       let user = await this.userService.fetchUserByEmail(email);
       if (user) {
-        return res.status(400).json("Email already exists!");
+        return res.status(400).json('Email already exists!');
       }
 
       // create new user with information provided
@@ -39,7 +39,7 @@ export class AuthController {
 
       // send back access token in response and refresh token in cookie
       res.cookie(
-        "refreshToken",
+        'refreshToken',
         jwtGenerator({ user_id: dataValues.id }, 60 * 15),
         { httpOnly: true, expires: new Date(Date.now() + 60 * 15 * 1000) }
       );
@@ -58,12 +58,12 @@ export class AuthController {
 
     // validate if the email and password were received
     if (!email || !password) {
-      return res.status(400).json("Missing login information!");
+      return res.status(400).json('Missing login information!');
     }
 
     try {
       // call function to login user
-      const user = await this.userService.loginUser({ email, password });
+      const user: any = await this.userService.loginUser({ email, password });
 
       if (user.message) {
         throw user;
@@ -71,10 +71,10 @@ export class AuthController {
 
       // user is who they say they are
       // give access and refresh token to user
-      const id = user.getDataValue("id");
+      const id = user.getDataValue('id');
       const token = jwtGenerator({ user_id: id }, 60 * 10);
 
-      res.cookie("refreshToken", jwtGenerator({ user_id: id }, 60 * 15), {
+      res.cookie('refreshToken', jwtGenerator({ user_id: id }, 60 * 15), {
         httpOnly: true,
         expires: new Date(Date.now() + 60 * 15 * 1000),
       });
@@ -88,7 +88,7 @@ export class AuthController {
   isAuthenticated = (req: any, res: Response) => {
     try {
       if (!req.user) {
-        return res.status(403).json("Not Authenticated");
+        return res.status(403).json('Not Authenticated');
       }
 
       res.json({ authenticated: true });
@@ -106,11 +106,11 @@ export class AuthController {
       const { user_id } = decodeToken(refreshToken);
 
       if (!user_id) {
-        throw { message: "Not Authenticated" };
+        throw { message: 'Not Authenticated' };
       }
 
       const token = jwtGenerator({ user_id }, 60 * 10);
-      res.cookie("refreshToken", jwtGenerator({ user_id }, 60 * 15), {
+      res.cookie('refreshToken', jwtGenerator({ user_id }, 60 * 15), {
         httpOnly: true,
         expires: new Date(Date.now() + 60 * 15 * 1000),
       });

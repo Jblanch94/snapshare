@@ -7,6 +7,9 @@ let keys: {
   password: any;
   port: any;
   jwt_secret: any;
+  cloudinary_cloud_name: any;
+  cloudinary_api_secret: any;
+  cloudinary_api_key: any;
 };
 
 if (process.env.NODE_ENV === "production") {
