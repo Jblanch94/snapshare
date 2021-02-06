@@ -31,7 +31,7 @@ export class UserService {
   }
 
   // retrive a user by id
-  async fetchUserById(id: number) {
+  async fetchUserById(id: number): Promise<Model<any, any> | null> {
     try {
       const user = await User.findOne({
         where: {
@@ -48,7 +48,7 @@ export class UserService {
   }
 
   // delete a user by id
-  async deleteUserById(id: number) {
+  async deleteUserById(id: number): Promise<number | null> {
     try {
       const deletedUser = await User.destroy({
         where: {
@@ -71,7 +71,7 @@ export class UserService {
     }
   }
 
-  async loginUser(data: UserLoginData) {
+  async loginUser(data: UserLoginData): Promise<Model<any, any> | null> {
     try {
       // fetch user by email
       const userByEmail = await this.fetchUserByEmail(data.email);

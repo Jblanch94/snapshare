@@ -51,7 +51,7 @@ var AuthController = /** @class */ (function () {
                         _a = req.body, first_name = _a.first_name, last_name = _a.last_name, email = _a.email, password = _a.password, img = _a.img;
                         // the only param not required is img, but if provided works as well
                         if (!first_name || !last_name || !email || !password) {
-                            return [2 /*return*/, res.status(400).json("Missing registration information")];
+                            return [2 /*return*/, res.status(400).json('Missing registration information')];
                         }
                         _b.label = 1;
                     case 1:
@@ -60,7 +60,7 @@ var AuthController = /** @class */ (function () {
                     case 2:
                         user = _b.sent();
                         if (user) {
-                            return [2 /*return*/, res.status(400).json("Email already exists!")];
+                            return [2 /*return*/, res.status(400).json('Email already exists!')];
                         }
                         return [4 /*yield*/, this.userService.registerUser({
                                 first_name: first_name,
@@ -72,7 +72,7 @@ var AuthController = /** @class */ (function () {
                         dataValues = (_b.sent()).dataValues;
                         token = jwtGenerator_1.jwtGenerator({ user_id: dataValues.id }, 60 * 10);
                         // send back access token in response and refresh token in cookie
-                        res.cookie("refreshToken", jwtGenerator_1.jwtGenerator({ user_id: dataValues.id }, 60 * 15), { httpOnly: true, expires: new Date(Date.now() + 60 * 15 * 1000) });
+                        res.cookie('refreshToken', jwtGenerator_1.jwtGenerator({ user_id: dataValues.id }, 60 * 15), { httpOnly: true, expires: new Date(Date.now() + 60 * 15 * 1000) });
                         // send back token to user
                         res.status(201).json({ accessToken: token });
                         return [3 /*break*/, 5];
@@ -94,7 +94,7 @@ var AuthController = /** @class */ (function () {
                         _a = req.body, email = _a.email, password = _a.password;
                         // validate if the email and password were received
                         if (!email || !password) {
-                            return [2 /*return*/, res.status(400).json("Missing login information!")];
+                            return [2 /*return*/, res.status(400).json('Missing login information!')];
                         }
                         _b.label = 1;
                     case 1:
@@ -105,9 +105,9 @@ var AuthController = /** @class */ (function () {
                         if (user.message) {
                             throw user;
                         }
-                        id = user.getDataValue("id");
+                        id = user.getDataValue('id');
                         token = jwtGenerator_1.jwtGenerator({ user_id: id }, 60 * 10);
-                        res.cookie("refreshToken", jwtGenerator_1.jwtGenerator({ user_id: id }, 60 * 15), {
+                        res.cookie('refreshToken', jwtGenerator_1.jwtGenerator({ user_id: id }, 60 * 15), {
                             httpOnly: true,
                             expires: new Date(Date.now() + 60 * 15 * 1000),
                         });
@@ -125,7 +125,7 @@ var AuthController = /** @class */ (function () {
         this.isAuthenticated = function (req, res) {
             try {
                 if (!req.user) {
-                    return res.status(403).json("Not Authenticated");
+                    return res.status(403).json('Not Authenticated');
                 }
                 res.json({ authenticated: true });
             }
@@ -140,10 +140,10 @@ var AuthController = /** @class */ (function () {
             try {
                 var user_id = validToken_1.decodeToken(refreshToken).user_id;
                 if (!user_id) {
-                    throw { message: "Not Authenticated" };
+                    throw { message: 'Not Authenticated' };
                 }
                 var token = jwtGenerator_1.jwtGenerator({ user_id: user_id }, 60 * 10);
-                res.cookie("refreshToken", jwtGenerator_1.jwtGenerator({ user_id: user_id }, 60 * 15), {
+                res.cookie('refreshToken', jwtGenerator_1.jwtGenerator({ user_id: user_id }, 60 * 15), {
                     httpOnly: true,
                     expires: new Date(Date.now() + 60 * 15 * 1000),
                 });
