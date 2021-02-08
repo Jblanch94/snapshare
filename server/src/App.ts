@@ -6,6 +6,7 @@ import { setupCloudinaryConfig } from './cloudinary';
 import { router as authRoutes } from './routes/auth';
 import { router as userRoutes } from './routes/user';
 import { router as postRoutes } from './routes/post';
+import { router as commentRoutes } from './routes/comment';
 
 class App {
   app: Express;
@@ -37,6 +38,7 @@ class App {
       this.app.use(`${url}/auth`, authRoutes);
       this.app.use(`${url}/user`, userRoutes);
       this.app.use(`${url}/post`, postRoutes);
+      this.app.use(`${url}/comment`, commentRoutes);
 
       // start server
       this.app.listen(PORT, () => {
