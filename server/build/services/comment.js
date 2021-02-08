@@ -35,57 +35,62 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.App = void 0;
-var express_1 = __importDefault(require("express"));
-var cookie_parser_1 = __importDefault(require("cookie-parser"));
-var DatabaseService_1 = require("./services/DatabaseService");
-var models_associations_1 = require("./models/models.associations");
-var cloudinary_1 = require("./cloudinary");
-var auth_1 = require("./routes/auth");
-var user_1 = require("./routes/user");
-var post_1 = require("./routes/post");
-var comment_1 = require("./routes/comment");
-var App = /** @class */ (function () {
-    function App() {
-        this.app = express_1.default();
+exports.CommentService = void 0;
+var Comment_1 = require("../models/Comment");
+var CommentService = /** @class */ (function () {
+    function CommentService() {
     }
-    App.prototype.start = function () {
+    // function that creates a new comment
+    CommentService.prototype.createComment = function (comment, post_id, user_id) {
         return __awaiter(this, void 0, void 0, function () {
-            var PORT, db, associations, url;
+            var newComment, err_1;
             return __generator(this, function (_a) {
-                PORT = process.env.PORT || 5000;
-                db = DatabaseService_1.sequelize.getInstance;
-                associations = new models_associations_1.Associations(db);
-                url = '/snapshare/api';
-                try {
-                    associations.setupRelations();
-                    // await db.sync();
-                    // load in middlewares
-                    this.app.use(express_1.default.json());
-                    this.app.use(cookie_parser_1.default());
-                    // set up config for cloudinary
-                    cloudinary_1.setupCloudinaryConfig();
-                    // load in routes
-                    this.app.use(url + "/auth", auth_1.router);
-                    this.app.use(url + "/user", user_1.router);
-                    this.app.use(url + "/post", post_1.router);
-                    this.app.use(url + "/comment", comment_1.router);
-                    // start server
-                    this.app.listen(PORT, function () {
-                        console.log("Listening on port " + PORT);
-                    });
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, Comment_1.Comment.create({
+                                contents: comment,
+                                post_id: post_id,
+                                user_id: user_id,
+                            })];
+                    case 1:
+                        newComment = _a.sent();
+                        return [2 /*return*/, newComment];
+                    case 2:
+                        err_1 = _a.sent();
+                        console.error(err_1.message);
+                        return [2 /*return*/, err_1];
+                    case 3: return [2 /*return*/];
                 }
-                catch (error) {
-                    console.error(error.message);
-                }
-                return [2 /*return*/];
             });
         });
     };
-    return App;
+    // function that retrieves comments for a specific post
+    CommentService.prototype.fetchCommentsById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var comments, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, Comment_1.Comment.findAll({
+                                where: {
+                                    post_id: id,
+                                },
+                            })];
+                    case 1:
+                        comments = _a.sent();
+                        return [2 /*return*/, comments];
+                    case 2:
+                        err_2 = _a.sent();
+                        console.error(err_2.message);
+                        return [2 /*return*/, err_2];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return CommentService;
 }());
-exports.App = App;
+exports.CommentService = CommentService;
