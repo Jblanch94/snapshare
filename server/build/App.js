@@ -49,6 +49,7 @@ var auth_1 = require("./routes/auth");
 var user_1 = require("./routes/user");
 var post_1 = require("./routes/post");
 var comment_1 = require("./routes/comment");
+var favorite_1 = require("./routes/favorite");
 var App = /** @class */ (function () {
     function App() {
         this.app = express_1.default();
@@ -74,6 +75,7 @@ var App = /** @class */ (function () {
                     this.app.use(url + "/user", user_1.router);
                     this.app.use(url + "/post", post_1.router);
                     this.app.use(url + "/comment", comment_1.router);
+                    this.app.use(url + "/favorite", favorite_1.router);
                     // start server
                     this.app.listen(PORT, function () {
                         console.log("Listening on port " + PORT);
