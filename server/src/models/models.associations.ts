@@ -21,10 +21,6 @@ export class Associations {
       through: models.Post_Tag,
       foreignKey: 'post_id',
     });
-    models.Post_Tag.belongsTo(models.Post);
-    models.Post_Tag.belongsTo(models.Tag);
-    models.Post.hasMany(models.Post_Tag);
-    models.Tag.hasMany(models.Post_Tag);
 
     // set up relation between comments, post and user
     models.User.hasMany(models.Comment);
@@ -41,10 +37,6 @@ export class Associations {
       through: models.Favorite,
       foreignKey: 'user_id',
     });
-    models.User.hasMany(models.Favorite);
-    models.Post.hasMany(models.Favorite);
-    models.Favorite.belongsTo(models.User);
-    models.Favorite.belongsTo(models.Post);
 
     // set up relation between user and album
     models.User.hasMany(models.Album);
@@ -59,10 +51,6 @@ export class Associations {
       through: models.Album_Post,
       foreignKey: 'album_id',
     });
-    models.Album.hasMany(models.Album_Post);
-    models.Post.hasMany(models.Album_Post);
-    models.Album_Post.belongsTo(models.Post);
-    models.Album_Post.belongsTo(models.Album);
 
     // set up relation between upvotes with post and user
     models.User.belongsToMany(models.Post, {
@@ -73,9 +61,5 @@ export class Associations {
       through: models.Upvote,
       foreignKey: 'post_id',
     });
-    models.User.hasMany(models.Upvote);
-    models.Post.hasMany(models.Upvote);
-    models.Upvote.belongsTo(models.Post);
-    models.Upvote.belongsTo(models.User);
   }
 }

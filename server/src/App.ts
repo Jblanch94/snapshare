@@ -8,6 +8,7 @@ import { router as userRoutes } from './routes/user';
 import { router as postRoutes } from './routes/post';
 import { router as commentRoutes } from './routes/comment';
 import { router as favoriteRoutes } from './routes/favorite';
+import { router as albumRoutes } from './routes/album';
 
 class App {
   app: Express;
@@ -26,7 +27,7 @@ class App {
 
     try {
       associations.setupRelations();
-      // await db.sync();
+      await db.sync();
 
       // load in middlewares
       this.app.use(express.json());
@@ -41,6 +42,7 @@ class App {
       this.app.use(`${url}/post`, postRoutes);
       this.app.use(`${url}/comment`, commentRoutes);
       this.app.use(`${url}/favorite`, favoriteRoutes);
+      this.app.use(`${url}/album`, albumRoutes);
 
       // start server
       this.app.listen(PORT, () => {
