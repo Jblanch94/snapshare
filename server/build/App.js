@@ -41,30 +41,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 var express_1 = __importDefault(require("express"));
-var cookie_parser_1 = __importDefault(require("cookie-parser"));
+var middleware_1 = require("./loaders/middleware");
+var routes_1 = require("./loaders/routes");
 var DatabaseService_1 = require("./services/DatabaseService");
 var models_associations_1 = require("./models/models.associations");
-var cloudinary_1 = require("./cloudinary");
-var auth_1 = require("./routes/auth");
-var user_1 = require("./routes/user");
-var post_1 = require("./routes/post");
-var comment_1 = require("./routes/comment");
-var favorite_1 = require("./routes/favorite");
-var album_1 = require("./routes/album");
 var App = /** @class */ (function () {
     function App() {
         this.app = express_1.default();
     }
     App.prototype.start = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var PORT, db, associations, url, error_1;
+            var PORT, db, associations, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         PORT = process.env.PORT || 5000;
                         db = DatabaseService_1.sequelize.getInstance;
                         associations = new models_associations_1.Associations(db);
-                        url = '/snapshare/api';
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -73,17 +66,9 @@ var App = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         // load in middlewares
-                        this.app.use(express_1.default.json());
-                        this.app.use(cookie_parser_1.default());
-                        // set up config for cloudinary
-                        cloudinary_1.setupCloudinaryConfig();
+                        middleware_1.loadMiddleware(this.app, express_1.default);
                         // load in routes
-                        this.app.use(url + "/auth", auth_1.router);
-                        this.app.use(url + "/user", user_1.router);
-                        this.app.use(url + "/post", post_1.router);
-                        this.app.use(url + "/comment", comment_1.router);
-                        this.app.use(url + "/favorite", favorite_1.router);
-                        this.app.use(url + "/album", album_1.router);
+                        routes_1.loadRoutes(this.app);
                         // start server
                         this.app.listen(PORT, function () {
                             console.log("Listening on port " + PORT);
