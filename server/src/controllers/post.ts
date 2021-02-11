@@ -127,4 +127,33 @@ export class PostController {
       res.status(500).json('Server Error');
     }
   };
+
+  // function that will fetch a post by id
+  fetchPostById = async (req: any, res: Response) => {
+    const { id } = req.params;
+    try {
+      const post = await this.postService.fetchPostById(id);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json('Server Error');
+    }
+  };
+
+  //TODO: NEED TO TEST WITH DIFFERENT TAGS, TITLES AND DESCRIPTIONS TO SEE IF WORKS PROPERLY
+  // function that will retrieve all posts with pagination with optional search term
+  fetchPosts = async (req: any, res: Response) => {
+    const { limit, page, term } = req.query;
+    try {
+      const posts = await this.postService.fetchPosts(
+        parseInt(limit),
+        parseInt(page),
+        term
+      );
+
+      res.json(posts);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json('Status Error');
+    }
+  };
 }

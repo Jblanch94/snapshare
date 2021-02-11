@@ -23,6 +23,10 @@ try {
     router.delete('/:id', authorization_1.authorization, postController.deletePost);
     // Route to upvote a post
     router.post('/:id/upvote', authorization_1.authorization, postController.upvotePost);
+    // Route to fetch a post by id
+    router.get('/:id', postController.fetchPostById);
+    // Route to fetch posts, includes pagination
+    router.get('/', postController.fetchPosts);
 }
 catch (error) {
     console.error(error.message);

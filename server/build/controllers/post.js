@@ -196,6 +196,54 @@ var PostController = /** @class */ (function () {
                 }
             });
         }); };
+        // function that will fetch a post by id
+        this.fetchPostById = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var id, post, err_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        id = req.params.id;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.postService.fetchPostById(id)];
+                    case 2:
+                        post = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_5 = _a.sent();
+                        console.error(err_5.message);
+                        res.status(500).json('Server Error');
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); };
+        //TODO: NEED TO TEST WITH DIFFERENT TAGS, TITLES AND DESCRIPTIONS TO SEE IF WORKS PROPERLY
+        // function that will retrieve all posts with pagination with optional search term
+        this.fetchPosts = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, limit, page, term, posts, err_6;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.query, limit = _a.limit, page = _a.page, term = _a.term;
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.postService.fetchPosts(parseInt(limit), parseInt(page), term)];
+                    case 2:
+                        posts = _b.sent();
+                        res.json(posts);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_6 = _b.sent();
+                        console.error(err_6.message);
+                        res.status(500).json('Status Error');
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); };
         this.config = cloudinary_1.default.v2.config({
             cloud_name: keys_1.keys.cloudinary_cloud_name,
             api_key: keys_1.keys.cloudinary_api_key,

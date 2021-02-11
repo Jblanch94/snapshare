@@ -42,6 +42,7 @@ var Post_1 = require("../models/Post");
 var Tag_1 = require("../models/Tag");
 var Post_Tag_1 = require("../models/Post_Tag");
 var Upvote_1 = require("../models/Upvote");
+var sequelize_1 = require("sequelize");
 var PostService = /** @class */ (function () {
     function PostService() {
     }
@@ -197,6 +198,7 @@ var PostService = /** @class */ (function () {
             });
         });
     };
+    // function that will create a new instance of the upvote model
     PostService.prototype.upvotePost = function (post_id, user_id) {
         return __awaiter(this, void 0, void 0, function () {
             var upvote, err_6;
@@ -214,6 +216,34 @@ var PostService = /** @class */ (function () {
                     case 2:
                         err_6 = _a.sent();
                         return [2 /*return*/, err_6];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // function that will fetch posts and do some pagination
+    PostService.prototype.fetchPosts = function (limit, page, term) {
+        return __awaiter(this, void 0, void 0, function () {
+            var offset, inputParameters, query, posts, err_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        offset = page * limit;
+                        inputParameters = { limit: limit, offset: offset, term: "%" + term + "%" };
+                        query = "SELECT DISTINCT p.* FROM posts p\n      JOIN posts_tags pt ON pt.post_id = p.id\n      JOIN tags t ON pt.tag_id = t.id\n      WHERE t.title LIKE :term\n      OR p.title LIKE :term\n      OR p.description LIKE :term\n      LIMIT :limit\n      OFFSET :offset";
+                        return [4 /*yield*/, db_1.sequelize.query(query, {
+                                type: sequelize_1.QueryTypes.SELECT,
+                                replacements: inputParameters,
+                            })];
+                    case 1:
+                        posts = _a.sent();
+                        console.log(posts);
+                        return [2 /*return*/, posts];
+                    case 2:
+                        err_7 = _a.sent();
+                        console.log('error', err_7);
+                        return [2 /*return*/, err_7];
                     case 3: return [2 /*return*/];
                 }
             });

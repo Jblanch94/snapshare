@@ -3,6 +3,7 @@ import { Post } from '../models/Post';
 import { Tag } from '../models/Tag';
 import { Post_Tag } from '../models/Post_Tag';
 import { Upvote } from '../models/Upvote';
+import { Op, QueryTypes } from 'sequelize';
 
 interface PostData {
   title: string;
@@ -110,6 +111,7 @@ export class PostService {
     }
   }
 
+  // function that will create a new instance of the upvote model
   async upvotePost(post_id: string, user_id: string) {
     try {
       const upvote = await Upvote.create({
@@ -118,6 +120,32 @@ export class PostService {
       });
       return upvote;
     } catch (err) {
+      return err;
+    }
+  }
+
+  // function that will fetch posts and do some pagination
+  async fetchPosts(limit: number, page: number, term: string) {
+    try {
+      const offset = page * limit;
+      const inputParameters = { limit, offset, term: `%${term}%` };
+      const query = `SELECT DISTINCT p.* FROM posts p
+      JOIN posts_tags pt ON pt.post_id = p.id
+      JOIN tags t ON pt.tag_id = t.id
+      WHERE t.title LIKE :term
+      OR p.title LIKE :term
+      OR p.description LIKE :term
+      LIMIT :limit
+      OFFSET :offset`;
+
+      const posts = await sequelize.query(query, {
+        type: QueryTypes.SELECT,
+        replacements: inputParameters,
+      });
+      console.log(posts);
+      return posts;
+    } catch (err) {
+      console.log('error', err);
       return err;
     }
   }
