@@ -21,6 +21,8 @@ try {
     router.patch('/:id', authorization_1.authorization, postController.updatePost);
     // Route to delete a post by the author
     router.delete('/:id', authorization_1.authorization, postController.deletePost);
+    // Route to upvote a post
+    router.post('/:id/upvote', authorization_1.authorization, postController.upvotePost);
 }
 catch (error) {
     console.error(error.message);

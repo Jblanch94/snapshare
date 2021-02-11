@@ -114,4 +114,17 @@ export class PostController {
       res.status(500).json('Server Error');
     }
   };
+
+  upvotePost = async (req: any, res: Response) => {
+    const { id } = req.params;
+    const { user_id } = req.user;
+
+    try {
+      const upvote = await this.postService.upvotePost(id, user_id);
+      res.status(201).json(upvote);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json('Server Error');
+    }
+  };
 }

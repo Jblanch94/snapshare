@@ -2,6 +2,7 @@ import { sequelize } from '../db';
 import { Post } from '../models/Post';
 import { Tag } from '../models/Tag';
 import { Post_Tag } from '../models/Post_Tag';
+import { Upvote } from '../models/Upvote';
 
 interface PostData {
   title: string;
@@ -105,6 +106,18 @@ export class PostService {
       return post;
     } catch (err) {
       console.error(err.message);
+      return err;
+    }
+  }
+
+  async upvotePost(post_id: string, user_id: string) {
+    try {
+      const upvote = await Upvote.create({
+        post_id,
+        user_id,
+      });
+      return upvote;
+    } catch (err) {
       return err;
     }
   }

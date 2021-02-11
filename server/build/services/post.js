@@ -41,6 +41,7 @@ var db_1 = require("../db");
 var Post_1 = require("../models/Post");
 var Tag_1 = require("../models/Tag");
 var Post_Tag_1 = require("../models/Post_Tag");
+var Upvote_1 = require("../models/Upvote");
 var PostService = /** @class */ (function () {
     function PostService() {
     }
@@ -191,6 +192,28 @@ var PostService = /** @class */ (function () {
                         err_5 = _a.sent();
                         console.error(err_5.message);
                         return [2 /*return*/, err_5];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PostService.prototype.upvotePost = function (post_id, user_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var upvote, err_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, Upvote_1.Upvote.create({
+                                post_id: post_id,
+                                user_id: user_id,
+                            })];
+                    case 1:
+                        upvote = _a.sent();
+                        return [2 /*return*/, upvote];
+                    case 2:
+                        err_6 = _a.sent();
+                        return [2 /*return*/, err_6];
                     case 3: return [2 /*return*/];
                 }
             });

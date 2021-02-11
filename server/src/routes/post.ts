@@ -23,6 +23,9 @@ try {
 
   // Route to delete a post by the author
   router.delete('/:id', authorization, postController.deletePost);
+
+  // Route to upvote a post
+  router.post('/:id/upvote', authorization, postController.upvotePost);
 } catch (error) {
   console.error(error.message);
 }
