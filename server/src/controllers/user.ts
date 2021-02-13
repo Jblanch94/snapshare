@@ -1,39 +1,37 @@
-import { Request, Response } from "express";
-import { UserService } from "../services/user";
+import { Response, NextFunction } from 'express';
+import { UserService } from '../services/user';
+import { ApiError } from '../error/apiError';
 
 export class UserController {
   userService: UserService;
   constructor() {
     this.userService = new UserService();
   }
-  fetchUser = async (req: any, res: Response) => {
+  fetchUser = async (req: any, res: Response, next: NextFunction) => {
     try {
       if (!req.user) {
-        return res.status(401).json("Not Authenticated");
+        return next(ApiError.unauthenticated('Not Authenticated!'));
       }
 
       const user = await this.userService.fetchUserById(req.user.user_id);
       res.json(user);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server Error");
+      next(ApiError.badRequest(err.message));
     }
   };
 
-  deleteUser = async (req: any, res: Response) => {
+  deleteUser = async (req: any, res: Response, next: NextFunction) => {
     try {
       if (!req.user) {
-        return res.status(401).json("Not Authenticated");
+        return next(ApiError.unauthenticated('Not Authenticated!'));
       }
 
       const deletedUser = await this.userService.deleteUserById(
         req.user.user_id
       );
-      console.log(deletedUser);
-      res.json("Your profile has been deleted!");
+      res.json('Your profile has been deleted!');
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json("Server Error");
+      next(ApiError.badRequest(err.message));
     }
   };
 }
