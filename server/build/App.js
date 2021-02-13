@@ -45,6 +45,7 @@ var middleware_1 = require("./loaders/middleware");
 var routes_1 = require("./loaders/routes");
 var DatabaseService_1 = require("./services/DatabaseService");
 var models_associations_1 = require("./models/models.associations");
+var errorHandler_1 = require("./error/errorHandler");
 var App = /** @class */ (function () {
     function App() {
         this.app = express_1.default();
@@ -69,6 +70,8 @@ var App = /** @class */ (function () {
                         middleware_1.loadMiddleware(this.app, express_1.default);
                         // load in routes
                         routes_1.loadRoutes(this.app);
+                        // load in error handler
+                        this.app.use(errorHandler_1.errorHanlder);
                         // start server
                         this.app.listen(PORT, function () {
                             console.log("Listening on port " + PORT);

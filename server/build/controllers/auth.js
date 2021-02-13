@@ -40,10 +40,11 @@ exports.AuthController = void 0;
 var user_1 = require("../services/user");
 var jwtGenerator_1 = require("../utils/jwtGenerator");
 var validToken_1 = require("../utils/validToken");
+var apiError_1 = require("../error/apiError");
 var AuthController = /** @class */ (function () {
     function AuthController() {
         var _this = this;
-        this.registerUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.registerUser = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, first_name, last_name, email, password, img, user, dataValues, token, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -51,7 +52,7 @@ var AuthController = /** @class */ (function () {
                         _a = req.body, first_name = _a.first_name, last_name = _a.last_name, email = _a.email, password = _a.password, img = _a.img;
                         // the only param not required is img, but if provided works as well
                         if (!first_name || !last_name || !email || !password) {
-                            return [2 /*return*/, res.status(400).json('Missing registration information')];
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('Missing registration information!'))];
                         }
                         _b.label = 1;
                     case 1:
@@ -60,7 +61,7 @@ var AuthController = /** @class */ (function () {
                     case 2:
                         user = _b.sent();
                         if (user) {
-                            return [2 /*return*/, res.status(400).json('Email already exists!')];
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('Email already exists!'))];
                         }
                         return [4 /*yield*/, this.userService.registerUser({
                                 first_name: first_name,
@@ -79,14 +80,14 @@ var AuthController = /** @class */ (function () {
                     case 4:
                         err_1 = _b.sent();
                         console.error(err_1.message);
-                        res.status(500).send(err_1.message);
+                        next(apiError_1.ApiError.badRequest(err_1.message));
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
             });
         }); };
         // Controller for logging in a user
-        this.loginUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.loginUser = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, email, password, user, id, token, err_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -94,16 +95,19 @@ var AuthController = /** @class */ (function () {
                         _a = req.body, email = _a.email, password = _a.password;
                         // validate if the email and password were received
                         if (!email || !password) {
-                            return [2 /*return*/, res.status(400).json('Missing login information!')];
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('Missing login information!'))];
                         }
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.userService.loginUser({ email: email, password: password })];
+                        return [4 /*yield*/, this.userService.loginUser({
+                                email: email,
+                                password: password,
+                            })];
                     case 2:
                         user = _b.sent();
                         if (user.message) {
-                            throw user;
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest(user.message))];
                         }
                         id = user.getDataValue('id');
                         token = jwtGenerator_1.jwtGenerator({ user_id: id }, 60 * 10);
@@ -115,32 +119,32 @@ var AuthController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_2 = _b.sent();
-                        res.status(500).json(err_2.message);
+                        next(apiError_1.ApiError.badRequest(err_2.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         }); };
         // Controller for the checking the authentication status of a user
-        this.isAuthenticated = function (req, res) {
+        this.isAuthenticated = function (req, res, next) {
             try {
                 if (!req.user) {
-                    return res.status(403).json('Not Authenticated');
+                    return next(apiError_1.ApiError.unauthenticated('Not authorized!'));
                 }
                 res.json({ authenticated: true });
             }
             catch (err) {
-                res.status(500).json(err.message);
+                next(apiError_1.ApiError.badRequest(err.message));
             }
         };
         // Controller for sending a refresh token
-        this.refreshToken = function (req, res) {
+        this.refreshToken = function (req, res, next) {
             var refreshToken = req.cookies.refreshToken;
             // call function to verify the token is valid
             try {
                 var user_id = validToken_1.decodeToken(refreshToken).user_id;
                 if (!user_id) {
-                    throw { message: 'Not Authenticated' };
+                    return next(apiError_1.ApiError.badRequest('Not Authenticated!'));
                 }
                 var token = jwtGenerator_1.jwtGenerator({ user_id: user_id }, 60 * 10);
                 res.cookie('refreshToken', jwtGenerator_1.jwtGenerator({ user_id: user_id }, 60 * 15), {
@@ -150,7 +154,7 @@ var AuthController = /** @class */ (function () {
                 res.json({ accessToken: token });
             }
             catch (err) {
-                res.status(500).send(err.message);
+                next(apiError_1.ApiError.badRequest(err.message));
             }
         };
         this.userService = new user_1.UserService();

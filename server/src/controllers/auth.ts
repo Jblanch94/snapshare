@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/user';
 import { jwtGenerator } from '../utils/jwtGenerator';
 import { decodeToken } from '../utils/validToken';
+import { ApiError } from '../error/apiError';
 
 export class AuthController {
   userService: UserService;
@@ -10,20 +11,20 @@ export class AuthController {
     this.userService = new UserService();
   }
 
-  registerUser = async (req: Request, res: Response) => {
+  registerUser = async (req: Request, res: Response, next: NextFunction) => {
     // validate we received the proper params in the body
     const { first_name, last_name, email, password, img } = req.body;
 
     // the only param not required is img, but if provided works as well
     if (!first_name || !last_name || !email || !password) {
-      return res.status(400).json('Missing registration information');
+      return next(ApiError.badRequest('Missing registration information!'));
     }
 
     try {
       // fetch user by email and respond if email already exists
       let user = await this.userService.fetchUserByEmail(email);
       if (user) {
-        return res.status(400).json('Email already exists!');
+        return next(ApiError.badRequest('Email already exists!'));
       }
 
       // create new user with information provided
@@ -48,25 +49,28 @@ export class AuthController {
       res.status(201).json({ accessToken: token });
     } catch (err) {
       console.error(err.message);
-      res.status(500).send(err.message);
+      next(ApiError.badRequest(err.message));
     }
   };
 
   // Controller for logging in a user
-  loginUser = async (req: Request, res: Response) => {
+  loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
     // validate if the email and password were received
     if (!email || !password) {
-      return res.status(400).json('Missing login information!');
+      return next(ApiError.badRequest('Missing login information!'));
     }
 
     try {
       // call function to login user
-      const user: any = await this.userService.loginUser({ email, password });
+      const user: any = await this.userService.loginUser({
+        email,
+        password,
+      });
 
       if (user.message) {
-        throw user;
+        return next(ApiError.badRequest(user.message));
       }
 
       // user is who they say they are
@@ -80,25 +84,25 @@ export class AuthController {
       });
       res.json({ accessToken: token });
     } catch (err) {
-      res.status(500).json(err.message);
+      next(ApiError.badRequest(err.message));
     }
   };
 
   // Controller for the checking the authentication status of a user
-  isAuthenticated = (req: any, res: Response) => {
+  isAuthenticated = (req: any, res: Response, next: NextFunction) => {
     try {
       if (!req.user) {
-        return res.status(403).json('Not Authenticated');
+        return next(ApiError.unauthenticated('Not authorized!'));
       }
 
       res.json({ authenticated: true });
     } catch (err) {
-      res.status(500).json(err.message);
+      next(ApiError.badRequest(err.message));
     }
   };
 
   // Controller for sending a refresh token
-  refreshToken = (req: Request, res: Response) => {
+  refreshToken = (req: Request, res: Response, next: NextFunction) => {
     const { refreshToken } = req.cookies;
 
     // call function to verify the token is valid
@@ -106,7 +110,7 @@ export class AuthController {
       const { user_id } = decodeToken(refreshToken);
 
       if (!user_id) {
-        throw { message: 'Not Authenticated' };
+        return next(ApiError.badRequest('Not Authenticated!'));
       }
 
       const token = jwtGenerator({ user_id }, 60 * 10);
@@ -116,7 +120,7 @@ export class AuthController {
       });
       res.json({ accessToken: token });
     } catch (err) {
-      res.status(500).send(err.message);
+      next(ApiError.badRequest(err.message));
     }
   };
 }

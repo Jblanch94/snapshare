@@ -3,6 +3,7 @@ import { loadMiddleware } from './loaders/middleware';
 import { loadRoutes } from './loaders/routes';
 import { sequelize } from './services/DatabaseService';
 import { Associations } from './models/models.associations';
+import { errorHanlder } from './error/errorHandler';
 
 class App {
   app: Express;
@@ -27,6 +28,9 @@ class App {
 
       // load in routes
       loadRoutes(this.app);
+
+      // load in error handler
+      this.app.use(errorHanlder);
 
       // start server
       this.app.listen(PORT, () => {
