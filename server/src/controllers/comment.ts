@@ -1,4 +1,5 @@
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
+import { ApiError } from '../error/apiError';
 import { CommentService } from '../services/comment';
 
 export class CommentController {
@@ -7,7 +8,7 @@ export class CommentController {
     this.commentService = new CommentService();
   }
 
-  createComment = async (req: any, res: Response) => {
+  createComment = async (req: any, res: Response, next: NextFunction) => {
     const { contents } = req.body;
     const { id } = req.params;
     const { user_id } = req.user;
@@ -22,25 +23,23 @@ export class CommentController {
 
       // if there is a validation error
       if (comment.errors) {
-        throw comment.errors;
+        return next(ApiError.badRequest(comment.errors.message));
       }
 
       res.json(comment.dataValues);
     } catch (err) {
-      console.error(err[0].message);
-      res.status(500).json(err[0].message);
+      next(ApiError.badRequest(err.message));
     }
   };
 
-  fetchComments = async (req: any, res: Response) => {
+  fetchComments = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     try {
       const comments = await this.commentService.fetchCommentsById(id);
       res.json(comments);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Server Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 }

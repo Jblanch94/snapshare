@@ -1,13 +1,9 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import cloudinary from 'cloudinary';
 import { keys } from '../config/keys';
 import { PostService } from '../services/post';
-import { promisify } from 'util';
-import fs from 'fs';
-
-// TODO: extract into own file
-// function to remove file
-const unlinkAsync = promisify(fs.unlink);
+import { ApiError } from '../error/apiError';
+import { unlinkAsync } from '../utils/removeFile';
 
 export class PostController {
   config: void;
@@ -22,12 +18,12 @@ export class PostController {
   }
 
   // function that stores image and creates a new post, tags and associate tags with the model
-  createPost = async (req: any, res: Response) => {
+  createPost = async (req: any, res: Response, next: NextFunction) => {
     const { title, description, tags } = req.body;
     const { user_id } = req.user;
 
     if (!title || !description || tags.length === 0) {
-      return res.json('Missing Post Information!');
+      return next(ApiError.badRequest('Missing Post Information!'));
     }
 
     // call method to send image off to cloudinary and get url back
@@ -51,13 +47,12 @@ export class PostController {
 
       res.status(201).json(post);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json(err);
+      next(ApiError.badRequest(err.message));
     }
   };
 
   // function that deletes a post by the id provided if the user created the original post
-  deletePost = async (req: any, res: Response) => {
+  deletePost = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { user_id } = req.user;
 
@@ -67,9 +62,9 @@ export class PostController {
 
       // if author id and current user id don't match then respond can't delete post it is not your own
       if (post.getDataValue('user_id') !== user_id) {
-        return res
-          .status(400)
-          .json(`Can't delete post, this is not your post!`);
+        return next(
+          ApiError.badRequest("Can't delete post, this is not your post!")
+        );
       }
 
       // call function to delete post
@@ -77,19 +72,20 @@ export class PostController {
 
       res.json('Successfully deleted post!');
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json(err.message);
+      next(ApiError.badRequest(err.message));
     }
   };
 
-  updatePost = async (req: any, res: Response) => {
+  updatePost = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { user_id } = req.user;
     const { title, description } = req.body;
 
     if (title === undefined && description === undefined) {
-      return res.json(
-        'You must provide at least one update for the title or description!'
+      return next(
+        ApiError.badRequest(
+          'You must provide at least one update for the title or description!'
+        )
       );
     }
 
@@ -99,9 +95,9 @@ export class PostController {
 
       // if author id and current user id don't match then respond can't update post it is not your own
       if (post.getDataValue('user_id') !== user_id) {
-        return res
-          .status(400)
-          .json(`Can't delete post, this is not your post!`);
+        return next(
+          ApiError.badRequest("Can't delete post, this is not your post!")
+        );
       }
 
       await this.postService.updatePost(id, {
@@ -110,12 +106,11 @@ export class PostController {
       });
       res.json('Post was successfully updated');
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Server Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 
-  upvotePost = async (req: any, res: Response) => {
+  upvotePost = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { user_id } = req.user;
 
@@ -123,25 +118,24 @@ export class PostController {
       const upvote = await this.postService.upvotePost(id, user_id);
       res.status(201).json(upvote);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Server Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 
   // function that will fetch a post by id
-  fetchPostById = async (req: any, res: Response) => {
+  fetchPostById = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
       const post = await this.postService.fetchPostById(id);
+      res.json(post.dataValues);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Server Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 
   //TODO: NEED TO TEST WITH DIFFERENT TAGS, TITLES AND DESCRIPTIONS TO SEE IF WORKS PROPERLY
   // function that will retrieve all posts with pagination with optional search term
-  fetchPosts = async (req: any, res: Response) => {
+  fetchPosts = async (req: any, res: Response, next: NextFunction) => {
     const { limit, page, term } = req.query;
     try {
       const posts = await this.postService.fetchPosts(
@@ -152,8 +146,7 @@ export class PostController {
 
       res.json(posts);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Status Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 }

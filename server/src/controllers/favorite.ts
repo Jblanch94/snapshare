@@ -1,5 +1,6 @@
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 import { FavoriteService } from '../services/favorite';
+import { ApiError } from '../error/apiError';
 
 export class FavoriteController {
   favoriteService: FavoriteService;
@@ -8,7 +9,7 @@ export class FavoriteController {
   }
 
   // function that retrieves all of the user's favorited posts
-  fetchFavoritedPosts = async (req: any, res: Response) => {
+  fetchFavoritedPosts = async (req: any, res: Response, next: NextFunction) => {
     const { user_id } = req.user;
 
     try {
@@ -17,14 +18,13 @@ export class FavoriteController {
       );
       res.json(favoritedPosts);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Server Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 
   //TODO: ADD ERROR CHECKING SO USER CANT FAVORITE THE SAME POST MORE THAN ONCE
   // function that adds a post to a user's favorited collection
-  createFavoritedPost = async (req: any, res: Response) => {
+  createFavoritedPost = async (req: any, res: Response, next: NextFunction) => {
     try {
       const { user_id } = req.user;
       const { id } = req.params;
@@ -35,13 +35,12 @@ export class FavoriteController {
       );
       res.json(favoritedPost);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Server Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 
   // deleted a favorited post for a specific user
-  deleteFavoritedPost = async (req: any, res: Response) => {
+  deleteFavoritedPost = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { user_id } = req.user;
 
@@ -49,8 +48,7 @@ export class FavoriteController {
       await this.favoriteService.deleteFavoritedPost(user_id, id);
       res.json('Removed post from favorites');
     } catch (err) {
-      console.error(err.message);
-      res.status(500).json('Server Error');
+      next(ApiError.badRequest(err.message));
     }
   };
 }

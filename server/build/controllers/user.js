@@ -38,17 +38,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 var user_1 = require("../services/user");
+var apiError_1 = require("../error/apiError");
 var UserController = /** @class */ (function () {
     function UserController() {
         var _this = this;
-        this.fetchUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.fetchUser = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var user, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         if (!req.user) {
-                            return [2 /*return*/, res.status(401).json("Not Authenticated")];
+                            return [2 /*return*/, next(apiError_1.ApiError.unauthenticated('Not Authenticated!'))];
                         }
                         return [4 /*yield*/, this.userService.fetchUserById(req.user.user_id)];
                     case 1:
@@ -57,32 +58,29 @@ var UserController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         err_1 = _a.sent();
-                        console.error(err_1.message);
-                        res.status(500).send("Server Error");
+                        next(apiError_1.ApiError.badRequest(err_1.message));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         }); };
-        this.deleteUser = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.deleteUser = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var deletedUser, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         if (!req.user) {
-                            return [2 /*return*/, res.status(401).json("Not Authenticated")];
+                            return [2 /*return*/, next(apiError_1.ApiError.unauthenticated('Not Authenticated!'))];
                         }
                         return [4 /*yield*/, this.userService.deleteUserById(req.user.user_id)];
                     case 1:
                         deletedUser = _a.sent();
-                        console.log(deletedUser);
-                        res.json("Your profile has been deleted!");
+                        res.json('Your profile has been deleted!');
                         return [3 /*break*/, 3];
                     case 2:
                         err_2 = _a.sent();
-                        console.error(err_2.message);
-                        res.status(500).json("Server Error");
+                        next(apiError_1.ApiError.badRequest(err_2.message));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

@@ -71,7 +71,7 @@ var App = /** @class */ (function () {
                         // load in routes
                         routes_1.loadRoutes(this.app);
                         // load in error handler
-                        this.app.use(errorHandler_1.errorHanlder);
+                        this.app.use(errorHandler_1.errorHandler);
                         // start server
                         this.app.listen(PORT, function () {
                             console.log("Listening on port " + PORT);

@@ -1,13 +1,14 @@
-import { Response, NextFunction } from "express";
-import { decodeToken } from "../utils/validToken";
+import { Response, NextFunction } from 'express';
+import { decodeToken } from '../utils/validToken';
+import { ApiError } from '../error/apiError';
 
 export const authorization = (req: any, res: Response, next: NextFunction) => {
   // get the token from the header
-  const token = req["headers"].authorization?.split(" ")[1];
+  const token = req['headers'].authorization?.split(' ')[1];
 
   // if no token then respond with not authenticated
   if (!token) {
-    return res.status(403).json("Not Authorized");
+    return res.status(401).json('Not Authenticated!');
   }
 
   // compare the token to see if it is valid
@@ -19,11 +20,11 @@ export const authorization = (req: any, res: Response, next: NextFunction) => {
     }
 
     if (!decoded) {
-      throw { message: "Not Authorized" };
+      throw { message: 'Not Authorized' };
     }
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(500).json(err.message);
+    next(ApiError.badRequest(err.message));
   }
 };
