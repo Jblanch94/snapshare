@@ -37,11 +37,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommentController = void 0;
+var apiError_1 = require("../error/apiError");
 var comment_1 = require("../services/comment");
 var CommentController = /** @class */ (function () {
     function CommentController() {
         var _this = this;
-        this.createComment = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.createComment = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var contents, id, user_id, comment, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -57,20 +58,19 @@ var CommentController = /** @class */ (function () {
                         comment = _a.sent();
                         // if there is a validation error
                         if (comment.errors) {
-                            throw comment.errors;
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest(comment.errors.message))];
                         }
                         res.json(comment.dataValues);
                         return [3 /*break*/, 4];
                     case 3:
                         err_1 = _a.sent();
-                        console.error(err_1[0].message);
-                        res.status(500).json(err_1[0].message);
+                        next(apiError_1.ApiError.badRequest(err_1.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         }); };
-        this.fetchComments = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.fetchComments = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, comments, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -86,8 +86,7 @@ var CommentController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_2 = _a.sent();
-                        console.error(err_2.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_2.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

@@ -129,7 +129,7 @@ export class PostService {
     try {
       const offset = page * limit;
       const inputParameters = { limit, offset, term: `%${term}%` };
-      const query = `SELECT DISTINCT p.* FROM posts p
+      const queryWithTerm = `SELECT DISTINCT p.* FROM posts p
       JOIN posts_tags pt ON pt.post_id = p.id
       JOIN tags t ON pt.tag_id = t.id
       WHERE t.title LIKE :term
@@ -138,14 +138,20 @@ export class PostService {
       LIMIT :limit
       OFFSET :offset`;
 
+      const queryWithoutTerm = `SELECT DISTINCT * FROM posts
+      ORDER BY created_at
+      LIMIT :limit
+      OFFSET :offset
+      `;
+
+      const query = term ? queryWithTerm : queryWithoutTerm;
+
       const posts = await sequelize.query(query, {
         type: QueryTypes.SELECT,
         replacements: inputParameters,
       });
-      console.log(posts);
       return posts;
     } catch (err) {
-      console.log('error', err);
       return err;
     }
   }

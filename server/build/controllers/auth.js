@@ -44,6 +44,7 @@ var apiError_1 = require("../error/apiError");
 var AuthController = /** @class */ (function () {
     function AuthController() {
         var _this = this;
+        //TODO: Throws error with validation on parameters
         this.registerUser = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, first_name, last_name, email, password, img, user, dataValues, token, err_1;
             return __generator(this, function (_b) {

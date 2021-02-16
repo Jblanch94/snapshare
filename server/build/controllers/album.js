@@ -38,11 +38,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlbumController = void 0;
 var album_1 = require("../services/album");
+var apiError_1 = require("../error/apiError");
 var AlbumController = /** @class */ (function () {
     function AlbumController() {
         var _this = this;
         // function that creates a new album for a user
-        this.createAlbum = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.createAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var title, user_id, album, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -59,15 +60,14 @@ var AlbumController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_1 = _a.sent();
-                        console.error(err_1.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_1.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         }); };
         // function that edits the name of an album
-        this.editAlbum = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.editAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var title, id, updates, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -75,7 +75,7 @@ var AlbumController = /** @class */ (function () {
                         title = req.body.title;
                         id = req.params.id;
                         if (!title) {
-                            return [2 /*return*/, res.status(400).json('Missing title')];
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('Missing title for album!'))];
                         }
                         _a.label = 1;
                     case 1:
@@ -90,8 +90,7 @@ var AlbumController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_2 = _a.sent();
-                        console.error(err_2.message);
-                        res.status(500).json(err_2.message);
+                        next(apiError_1.ApiError.badRequest(err_2.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -99,7 +98,7 @@ var AlbumController = /** @class */ (function () {
         }); };
         //TODO: ADD ERROR HANDLING FOR TRYING TO ALLOW TWO OF THE SAME POST IN THE SAME ALBUM
         // controller that inserts a post from the current user into the album
-        this.insertPostIntoAlbum = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.insertPostIntoAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, albumId, postId, user_id, postInAlbum, err_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -116,15 +115,14 @@ var AlbumController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_3 = _b.sent();
-                        console.error(err_3.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_3.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         }); };
         // controller that deletes a post from a specified album
-        this.deletePostFromAlbum = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.deletePostFromAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, albumId, postId, deletedPost, err_4;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -143,15 +141,14 @@ var AlbumController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_4 = _b.sent();
-                        console.error(err_4.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_4.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         }); };
         // function that fetchs the posts in album, returns the key for the post id
-        this.fetchPostsInAlbum = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.fetchPostsInAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, postsInAlbum, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -167,16 +164,15 @@ var AlbumController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_5 = _a.sent();
-                        console.error(err_5.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_5.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         }); };
         // function that deletes an album and it's contents
-        this.deleteAlbum = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var id, deletedAlbum, err_6;
+        this.deleteAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var id, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -186,14 +182,12 @@ var AlbumController = /** @class */ (function () {
                         _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.albumService.deleteAlbum(id)];
                     case 2:
-                        deletedAlbum = _a.sent();
-                        console.log(deletedAlbum);
-                        res.json({});
+                        _a.sent();
+                        res.json('Successfully deleted Album');
                         return [3 /*break*/, 4];
                     case 3:
                         err_6 = _a.sent();
-                        console.error(err_6.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_6.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

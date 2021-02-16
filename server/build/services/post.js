@@ -224,25 +224,25 @@ var PostService = /** @class */ (function () {
     // function that will fetch posts and do some pagination
     PostService.prototype.fetchPosts = function (limit, page, term) {
         return __awaiter(this, void 0, void 0, function () {
-            var offset, inputParameters, query, posts, err_7;
+            var offset, inputParameters, queryWithTerm, queryWithoutTerm, query, posts, err_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         offset = page * limit;
                         inputParameters = { limit: limit, offset: offset, term: "%" + term + "%" };
-                        query = "SELECT DISTINCT p.* FROM posts p\n      JOIN posts_tags pt ON pt.post_id = p.id\n      JOIN tags t ON pt.tag_id = t.id\n      WHERE t.title LIKE :term\n      OR p.title LIKE :term\n      OR p.description LIKE :term\n      LIMIT :limit\n      OFFSET :offset";
+                        queryWithTerm = "SELECT DISTINCT p.* FROM posts p\n      JOIN posts_tags pt ON pt.post_id = p.id\n      JOIN tags t ON pt.tag_id = t.id\n      WHERE t.title LIKE :term\n      OR p.title LIKE :term\n      OR p.description LIKE :term\n      LIMIT :limit\n      OFFSET :offset";
+                        queryWithoutTerm = "SELECT DISTINCT * FROM posts\n      ORDER BY created_at\n      LIMIT :limit\n      OFFSET :offset\n      ";
+                        query = term ? queryWithTerm : queryWithoutTerm;
                         return [4 /*yield*/, db_1.sequelize.query(query, {
                                 type: sequelize_1.QueryTypes.SELECT,
                                 replacements: inputParameters,
                             })];
                     case 1:
                         posts = _a.sent();
-                        console.log(posts);
                         return [2 /*return*/, posts];
                     case 2:
                         err_7 = _a.sent();
-                        console.log('error', err_7);
                         return [2 /*return*/, err_7];
                     case 3: return [2 /*return*/];
                 }

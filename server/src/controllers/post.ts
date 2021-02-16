@@ -22,7 +22,7 @@ export class PostController {
     const { title, description, tags } = req.body;
     const { user_id } = req.user;
 
-    if (!title || !description || tags.length === 0) {
+    if (!title || !description || !tags) {
       return next(ApiError.badRequest('Missing Post Information!'));
     }
 
@@ -51,6 +51,7 @@ export class PostController {
     }
   };
 
+  //TODO: THROWS ERROR IF POST DOES NOT EXIST, NEED TO ADD HOOK FOR BEFOREDESTROY
   // function that deletes a post by the id provided if the user created the original post
   deletePost = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
@@ -116,6 +117,10 @@ export class PostController {
 
     try {
       const upvote = await this.postService.upvotePost(id, user_id);
+
+      if (upvote.errors) {
+        return next(ApiError.badRequest('You have already upvoted this post!'));
+      }
       res.status(201).json(upvote);
     } catch (err) {
       next(ApiError.badRequest(err.message));
@@ -127,6 +132,11 @@ export class PostController {
     const { id } = req.params;
     try {
       const post = await this.postService.fetchPostById(id);
+
+      if (!post) {
+        return next(ApiError.notFound('No Post could be found!'));
+      }
+
       res.json(post.dataValues);
     } catch (err) {
       next(ApiError.badRequest(err.message));
@@ -143,7 +153,7 @@ export class PostController {
         parseInt(page),
         term
       );
-
+      console.log(posts);
       res.json(posts);
     } catch (err) {
       next(ApiError.badRequest(err.message));

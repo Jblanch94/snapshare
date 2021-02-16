@@ -38,5 +38,6 @@ var Album = db.define('Album', {
 }, {
     updatedAt: false,
     underscored: true,
+    createdAt: false
 });
 exports.Album = Album;

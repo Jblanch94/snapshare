@@ -11,6 +11,7 @@ export class AuthController {
     this.userService = new UserService();
   }
 
+  //TODO: Throws error with validation on parameters
   registerUser = async (req: Request, res: Response, next: NextFunction) => {
     // validate we received the proper params in the body
     const { first_name, last_name, email, password, img } = req.body;

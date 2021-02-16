@@ -38,11 +38,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FavoriteController = void 0;
 var favorite_1 = require("../services/favorite");
+var apiError_1 = require("../error/apiError");
 var FavoriteController = /** @class */ (function () {
     function FavoriteController() {
         var _this = this;
         // function that retrieves all of the user's favorited posts
-        this.fetchFavoritedPosts = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.fetchFavoritedPosts = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var user_id, favoritedPosts, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -58,8 +59,7 @@ var FavoriteController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_1 = _a.sent();
-                        console.error(err_1.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_1.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -67,7 +67,7 @@ var FavoriteController = /** @class */ (function () {
         }); };
         //TODO: ADD ERROR CHECKING SO USER CANT FAVORITE THE SAME POST MORE THAN ONCE
         // function that adds a post to a user's favorited collection
-        this.createFavoritedPost = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.createFavoritedPost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var user_id, id, favoritedPost, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -82,15 +82,14 @@ var FavoriteController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         err_2 = _a.sent();
-                        console.error(err_2.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_2.message));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         }); };
         // deleted a favorited post for a specific user
-        this.deleteFavoritedPost = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.deleteFavoritedPost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, user_id, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -107,8 +106,7 @@ var FavoriteController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         err_3 = _a.sent();
-                        console.error(err_3.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_3.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

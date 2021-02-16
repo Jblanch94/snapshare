@@ -14,6 +14,13 @@ export class UserController {
       }
 
       const user = await this.userService.fetchUserById(req.user.user_id);
+
+      if (user === null) {
+        return next(
+          ApiError.notFound('Could not find user you are looking for!')
+        );
+      }
+
       res.json(user);
     } catch (err) {
       next(ApiError.badRequest(err.message));
@@ -29,6 +36,15 @@ export class UserController {
       const deletedUser = await this.userService.deleteUserById(
         req.user.user_id
       );
+
+      if (deletedUser === 0) {
+        return next(
+          ApiError.notFound(
+            'Could not find and remove the account you looking for!'
+          )
+        );
+      }
+
       res.json('Your profile has been deleted!');
     } catch (err) {
       next(ApiError.badRequest(err.message));

@@ -12,4 +12,8 @@ export class ApiError {
   static internal() {
     return new ApiError(500, 'Server Error!');
   }
+
+  static notFound(message: string) {
+    return new ApiError(404, message);
+  }
 }

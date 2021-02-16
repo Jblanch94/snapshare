@@ -54,6 +54,9 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, this.userService.fetchUserById(req.user.user_id)];
                     case 1:
                         user = _a.sent();
+                        if (user === null) {
+                            return [2 /*return*/, next(apiError_1.ApiError.notFound('Could not find user you are looking for!'))];
+                        }
                         res.json(user);
                         return [3 /*break*/, 3];
                     case 2:
@@ -76,6 +79,9 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, this.userService.deleteUserById(req.user.user_id)];
                     case 1:
                         deletedUser = _a.sent();
+                        if (deletedUser === 0) {
+                            return [2 /*return*/, next(apiError_1.ApiError.notFound('Could not find and remove the account you looking for!'))];
+                        }
                         res.json('Your profile has been deleted!');
                         return [3 /*break*/, 3];
                     case 2:

@@ -43,24 +43,21 @@ exports.PostController = void 0;
 var cloudinary_1 = __importDefault(require("cloudinary"));
 var keys_1 = require("../config/keys");
 var post_1 = require("../services/post");
-var util_1 = require("util");
-var fs_1 = __importDefault(require("fs"));
-// TODO: extract into own file
-// function to remove file
-var unlinkAsync = util_1.promisify(fs_1.default.unlink);
+var apiError_1 = require("../error/apiError");
+var removeFile_1 = require("../utils/removeFile");
 var PostController = /** @class */ (function () {
     function PostController() {
         var _this = this;
         // function that stores image and creates a new post, tags and associate tags with the model
-        this.createPost = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.createPost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, title, description, tags, user_id, url, post, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, title = _a.title, description = _a.description, tags = _a.tags;
                         user_id = req.user.user_id;
-                        if (!title || !description || tags.length === 0) {
-                            return [2 /*return*/, res.json('Missing Post Information!')];
+                        if (!title || !description || !tags) {
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('Missing Post Information!'))];
                         }
                         _b.label = 1;
                     case 1:
@@ -72,7 +69,7 @@ var PostController = /** @class */ (function () {
                     case 2:
                         url = (_b.sent()).url;
                         // remove temporary after upload is complete
-                        return [4 /*yield*/, unlinkAsync(req.file.path)];
+                        return [4 /*yield*/, removeFile_1.unlinkAsync(req.file.path)];
                     case 3:
                         // remove temporary after upload is complete
                         _b.sent();
@@ -89,15 +86,15 @@ var PostController = /** @class */ (function () {
                         return [3 /*break*/, 6];
                     case 5:
                         err_1 = _b.sent();
-                        console.error(err_1.message);
-                        res.status(500).json(err_1);
+                        next(apiError_1.ApiError.badRequest(err_1.message));
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
         }); };
+        //TODO: THROWS ERROR IF POST DOES NOT EXIST, NEED TO ADD HOOK FOR BEFOREDESTROY
         // function that deletes a post by the id provided if the user created the original post
-        this.deletePost = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.deletePost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, user_id, post, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -112,9 +109,7 @@ var PostController = /** @class */ (function () {
                         post = _a.sent();
                         // if author id and current user id don't match then respond can't delete post it is not your own
                         if (post.getDataValue('user_id') !== user_id) {
-                            return [2 /*return*/, res
-                                    .status(400)
-                                    .json("Can't delete post, this is not your post!")];
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest("Can't delete post, this is not your post!"))];
                         }
                         // call function to delete post
                         return [4 /*yield*/, this.postService.deletePostById(id)];
@@ -125,14 +120,13 @@ var PostController = /** @class */ (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         err_2 = _a.sent();
-                        console.error(err_2.message);
-                        res.status(500).json(err_2.message);
+                        next(apiError_1.ApiError.badRequest(err_2.message));
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
             });
         }); };
-        this.updatePost = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.updatePost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, user_id, _a, title, description, post, err_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -141,7 +135,7 @@ var PostController = /** @class */ (function () {
                         user_id = req.user.user_id;
                         _a = req.body, title = _a.title, description = _a.description;
                         if (title === undefined && description === undefined) {
-                            return [2 /*return*/, res.json('You must provide at least one update for the title or description!')];
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('You must provide at least one update for the title or description!'))];
                         }
                         _b.label = 1;
                     case 1:
@@ -151,9 +145,7 @@ var PostController = /** @class */ (function () {
                         post = _b.sent();
                         // if author id and current user id don't match then respond can't update post it is not your own
                         if (post.getDataValue('user_id') !== user_id) {
-                            return [2 /*return*/, res
-                                    .status(400)
-                                    .json("Can't delete post, this is not your post!")];
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest("Can't delete post, this is not your post!"))];
                         }
                         return [4 /*yield*/, this.postService.updatePost(id, {
                                 title: title,
@@ -165,14 +157,13 @@ var PostController = /** @class */ (function () {
                         return [3 /*break*/, 5];
                     case 4:
                         err_3 = _b.sent();
-                        console.error(err_3.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_3.message));
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
             });
         }); };
-        this.upvotePost = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.upvotePost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, user_id, upvote, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -185,19 +176,21 @@ var PostController = /** @class */ (function () {
                         return [4 /*yield*/, this.postService.upvotePost(id, user_id)];
                     case 2:
                         upvote = _a.sent();
+                        if (upvote.errors) {
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('You have already upvoted this post!'))];
+                        }
                         res.status(201).json(upvote);
                         return [3 /*break*/, 4];
                     case 3:
                         err_4 = _a.sent();
-                        console.error(err_4.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_4.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         }); };
         // function that will fetch a post by id
-        this.fetchPostById = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.fetchPostById = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, post, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -209,11 +202,14 @@ var PostController = /** @class */ (function () {
                         return [4 /*yield*/, this.postService.fetchPostById(id)];
                     case 2:
                         post = _a.sent();
+                        if (!post) {
+                            return [2 /*return*/, next(apiError_1.ApiError.notFound('No Post could be found!'))];
+                        }
+                        res.json(post.dataValues);
                         return [3 /*break*/, 4];
                     case 3:
                         err_5 = _a.sent();
-                        console.error(err_5.message);
-                        res.status(500).json('Server Error');
+                        next(apiError_1.ApiError.badRequest(err_5.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -221,7 +217,7 @@ var PostController = /** @class */ (function () {
         }); };
         //TODO: NEED TO TEST WITH DIFFERENT TAGS, TITLES AND DESCRIPTIONS TO SEE IF WORKS PROPERLY
         // function that will retrieve all posts with pagination with optional search term
-        this.fetchPosts = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.fetchPosts = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, limit, page, term, posts, err_6;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -233,12 +229,12 @@ var PostController = /** @class */ (function () {
                         return [4 /*yield*/, this.postService.fetchPosts(parseInt(limit), parseInt(page), term)];
                     case 2:
                         posts = _b.sent();
+                        console.log(posts);
                         res.json(posts);
                         return [3 /*break*/, 4];
                     case 3:
                         err_6 = _b.sent();
-                        console.error(err_6.message);
-                        res.status(500).json('Status Error');
+                        next(apiError_1.ApiError.badRequest(err_6.message));
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

@@ -15,6 +15,9 @@ var ApiError = /** @class */ (function () {
     ApiError.internal = function () {
         return new ApiError(500, 'Server Error!');
     };
+    ApiError.notFound = function (message) {
+        return new ApiError(404, message);
+    };
     return ApiError;
 }());
 exports.ApiError = ApiError;
