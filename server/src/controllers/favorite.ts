@@ -22,7 +22,6 @@ export class FavoriteController {
     }
   };
 
-  //TODO: ADD ERROR CHECKING SO USER CANT FAVORITE THE SAME POST MORE THAN ONCE
   // function that adds a post to a user's favorited collection
   createFavoritedPost = async (req: any, res: Response, next: NextFunction) => {
     try {
@@ -33,6 +32,13 @@ export class FavoriteController {
         user_id,
         id
       );
+
+      if (favoritedPost.errors) {
+        return next(
+          ApiError.badRequest('You have already favorited this post!')
+        );
+      }
+
       res.json(favoritedPost);
     } catch (err) {
       next(ApiError.badRequest(err.message));
@@ -45,7 +51,17 @@ export class FavoriteController {
     const { user_id } = req.user;
 
     try {
-      await this.favoriteService.deleteFavoritedPost(user_id, id);
+      const numFavoritedPostsDeleted = await this.favoriteService.deleteFavoritedPost(
+        user_id,
+        id
+      );
+
+      if (numFavoritedPostsDeleted < 1) {
+        return next(
+          ApiError.notFound('Post you want to unfavorite does not exist!')
+        );
+      }
+
       res.json('Removed post from favorites');
     } catch (err) {
       next(ApiError.badRequest(err.message));

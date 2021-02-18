@@ -96,7 +96,6 @@ var AlbumController = /** @class */ (function () {
                 }
             });
         }); };
-        //TODO: ADD ERROR HANDLING FOR TRYING TO ALLOW TWO OF THE SAME POST IN THE SAME ALBUM
         // controller that inserts a post from the current user into the album
         this.insertPostIntoAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, albumId, postId, user_id, postInAlbum, err_3;
@@ -172,7 +171,7 @@ var AlbumController = /** @class */ (function () {
         }); };
         // function that deletes an album and it's contents
         this.deleteAlbum = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-            var id, err_6;
+            var id, numDeletedAlbums, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -182,7 +181,10 @@ var AlbumController = /** @class */ (function () {
                         _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.albumService.deleteAlbum(id)];
                     case 2:
-                        _a.sent();
+                        numDeletedAlbums = _a.sent();
+                        if (numDeletedAlbums < 1) {
+                            return [2 /*return*/, next(apiError_1.ApiError.notFound('The album you are trying to delete does not exist!'))];
+                        }
                         res.json('Successfully deleted Album');
                         return [3 /*break*/, 4];
                     case 3:

@@ -92,7 +92,6 @@ var PostController = /** @class */ (function () {
                 }
             });
         }); };
-        //TODO: THROWS ERROR IF POST DOES NOT EXIST, NEED TO ADD HOOK FOR BEFOREDESTROY
         // function that deletes a post by the id provided if the user created the original post
         this.deletePost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var id, user_id, post, err_2;
@@ -215,7 +214,6 @@ var PostController = /** @class */ (function () {
                 }
             });
         }); };
-        //TODO: NEED TO TEST WITH DIFFERENT TAGS, TITLES AND DESCRIPTIONS TO SEE IF WORKS PROPERLY
         // function that will retrieve all posts with pagination with optional search term
         this.fetchPosts = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var _a, limit, page, term, posts, err_6;

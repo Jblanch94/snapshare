@@ -42,7 +42,6 @@ export class AlbumController {
     }
   };
 
-  //TODO: ADD ERROR HANDLING FOR TRYING TO ALLOW TWO OF THE SAME POST IN THE SAME ALBUM
   // controller that inserts a post from the current user into the album
   insertPostIntoAlbum = async (req: any, res: Response, next: NextFunction) => {
     const { albumId, postId } = req.params;
@@ -94,7 +93,14 @@ export class AlbumController {
   deleteAlbum = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
-      await this.albumService.deleteAlbum(id);
+      const numDeletedAlbums = await this.albumService.deleteAlbum(id);
+      if (numDeletedAlbums < 1) {
+        return next(
+          ApiError.notFound(
+            'The album you are trying to delete does not exist!'
+          )
+        );
+      }
       res.json('Successfully deleted Album');
     } catch (err) {
       next(ApiError.badRequest(err.message));

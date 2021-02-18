@@ -51,7 +51,6 @@ export class PostController {
     }
   };
 
-  //TODO: THROWS ERROR IF POST DOES NOT EXIST, NEED TO ADD HOOK FOR BEFOREDESTROY
   // function that deletes a post by the id provided if the user created the original post
   deletePost = async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.params;
@@ -143,7 +142,6 @@ export class PostController {
     }
   };
 
-  //TODO: NEED TO TEST WITH DIFFERENT TAGS, TITLES AND DESCRIPTIONS TO SEE IF WORKS PROPERLY
   // function that will retrieve all posts with pagination with optional search term
   fetchPosts = async (req: any, res: Response, next: NextFunction) => {
     const { limit, page, term } = req.query;

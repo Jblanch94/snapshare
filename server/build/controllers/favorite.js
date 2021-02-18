@@ -65,7 +65,6 @@ var FavoriteController = /** @class */ (function () {
                 }
             });
         }); };
-        //TODO: ADD ERROR CHECKING SO USER CANT FAVORITE THE SAME POST MORE THAN ONCE
         // function that adds a post to a user's favorited collection
         this.createFavoritedPost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var user_id, id, favoritedPost, err_2;
@@ -78,6 +77,9 @@ var FavoriteController = /** @class */ (function () {
                         return [4 /*yield*/, this.favoriteService.createFavoritedPost(user_id, id)];
                     case 1:
                         favoritedPost = _a.sent();
+                        if (favoritedPost.errors) {
+                            return [2 /*return*/, next(apiError_1.ApiError.badRequest('You have already favorited this post!'))];
+                        }
                         res.json(favoritedPost);
                         return [3 /*break*/, 3];
                     case 2:
@@ -90,7 +92,7 @@ var FavoriteController = /** @class */ (function () {
         }); };
         // deleted a favorited post for a specific user
         this.deleteFavoritedPost = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-            var id, user_id, err_3;
+            var id, user_id, numFavoritedPostsDeleted, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -101,7 +103,10 @@ var FavoriteController = /** @class */ (function () {
                         _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.favoriteService.deleteFavoritedPost(user_id, id)];
                     case 2:
-                        _a.sent();
+                        numFavoritedPostsDeleted = _a.sent();
+                        if (numFavoritedPostsDeleted < 1) {
+                            return [2 /*return*/, next(apiError_1.ApiError.notFound('Post you want to unfavorite does not exist!'))];
+                        }
                         res.json('Removed post from favorites');
                         return [3 /*break*/, 4];
                     case 3:
