@@ -1,0 +1,24 @@
+input:focus + label {
+  margin-top: -8px;
+  color: #8994b8;
+  font-size: 0.8rem;
+  transition: margin 0.2s ease-in;
+}
+
+.active {
+  margin-top: -8px;
+  color: #8994b8;
+  font-size: 0.8rem;
+  transition: margin 0.2s ease-in;
+}
+
+.error-text {
+  font-size: 0.9rem;
+  color: red;
+  line-height: 1.2;
+  margin-top: 0;
+}
+
+.error {
+  border-color: red !important;
+}
