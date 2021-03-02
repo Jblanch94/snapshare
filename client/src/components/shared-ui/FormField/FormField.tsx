@@ -10,7 +10,6 @@ interface FormFieldProps extends FieldRenderProps<any, HTMLElement> {
 }
 
 const FormField: React.FC<FormFieldProps> = (props) => {
-  console.log(props);
   return (
     <div className="my-2 relative ">
       <input

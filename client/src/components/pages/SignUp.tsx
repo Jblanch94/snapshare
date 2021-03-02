@@ -6,18 +6,35 @@ import {
   validateEmail,
 } from '../../utils/formValidation';
 import { Form, Field, FieldRenderProps } from 'react-final-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../state/reducers';
+import { signUpUser } from '../../state/action-creators/authActions';
 import './SignUp.css';
 
-//TODO: NEED TO FIX BUTTON OVERFLOWING WHEN ALL FIELDS HAVE ERROR TEXT
+//TODO: Want to add in icon for toggle password visibility and highlight red text if passwords do not match
 const SignUp: React.FC = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector((state: RootState) => state.auth);
   const onSubmit = (values: any) => {
-    console.log(values);
+    const registrationValues = {
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      password: values.password_1,
+    };
 
     // implementation to submit form
+    dispatch(signUpUser(registrationValues));
   };
+
   return (
-    <main className=" h-screen bg-signUp bg-cover bg-center bg-no-repeat flex justify-center items-center">
+    <main
+      className=" h-screen bg-signUp bg-cover bg-center bg-no-repeat flex justify-center items-center"
+      id="main">
       <section className="bg-white p-4 rounded-md signup-section">
+        {auth.error && (
+          <h1 className="text-error text-3xl text-center">{auth.error}</h1>
+        )}
         <h1 className="text-center text-lg">Sign up for Snapshare</h1>
         <Form
           validate={validatePasswords}

@@ -7,6 +7,7 @@ module.exports = {
       secondary: '#FFB74D',
       white: '#fff',
       formLabel: '#898989',
+      error: 'red',
     },
     borderColor: {
       primary: '#fff',
