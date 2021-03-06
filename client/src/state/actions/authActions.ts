@@ -15,4 +15,19 @@ interface AuthError {
   payload: string;
 }
 
-export type AuthActions = SignUpUser | LoginUser | AuthError;
+interface IsAuthenticated {
+  type: authTypes.IS_AUTHENTICATED;
+  payload: boolean;
+}
+
+interface RefreshToken {
+  type: authTypes.REFRESH_TOKEN;
+  payload: string;
+}
+
+export type AuthActions =
+  | SignUpUser
+  | LoginUser
+  | AuthError
+  | IsAuthenticated
+  | RefreshToken;

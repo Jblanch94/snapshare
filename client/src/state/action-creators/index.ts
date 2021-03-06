@@ -1,2 +1,4 @@
 import * as authActions from './authActions';
-export { authActions };
+import * as userActions from './userActions';
+
+export { authActions, userActions };

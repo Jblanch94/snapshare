@@ -11,11 +11,11 @@ interface LoginValues {
 }
 
 const Login = () => {
-  const { loginUser } = useActions();
+  const { authActions } = useActions();
   const auth = useTypedSelector((state) => state.auth);
 
   const onSubmit = (values: LoginValues) => {
-    loginUser({ email: values.email, password: values.password });
+    authActions.loginUser({ email: values.email, password: values.password });
   };
 
   return (

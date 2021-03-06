@@ -1,9 +1,9 @@
-import Routes from './Routes';
+import RoutesContainer from '../containers/RoutesContainer';
 
 const App: React.FC = () => {
   return (
     <>
-      <Routes />
+      <RoutesContainer />
     </>
   );
 };

@@ -4,5 +4,7 @@ import actionCreators from '../state/';
 
 export const useActions = () => {
   const dispatch = useDispatch();
-  return bindActionCreators(actionCreators.authActions, dispatch);
+  const authActions = bindActionCreators(actionCreators.authActions, dispatch);
+  const userActions = bindActionCreators(actionCreators.userActions, dispatch);
+  return { authActions, userActions };
 };

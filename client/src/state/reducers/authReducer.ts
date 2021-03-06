@@ -32,6 +32,15 @@ export const authReducer = (
         token: action.payload,
         error: null,
       };
+    case authTypes.IS_AUTHENTICATED:
+      return { ...state, authenticated: action.payload, error: null };
+    case authTypes.REFRESH_TOKEN:
+      return {
+        ...state,
+        authenticated: true,
+        error: null,
+        token: action.payload,
+      };
     case authTypes.AUTH_ERROR:
       return {
         ...state,

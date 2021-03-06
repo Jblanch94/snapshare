@@ -18,7 +18,7 @@ interface SignupValues {
 
 //TODO: Want to add in icon for toggle password visibility and highlight red text if passwords do not match
 const SignUp: React.FC = () => {
-  const { signUpUser } = useActions();
+  const { authActions } = useActions();
   const auth = useTypedSelector((state) => state.auth);
   const onSubmit = (values: SignupValues) => {
     const registrationValues = {
@@ -29,7 +29,7 @@ const SignUp: React.FC = () => {
     };
 
     // call action creator to sign user up with form values supplied
-    signUpUser(registrationValues);
+    authActions.signUpUser(registrationValues);
   };
 
   return (
