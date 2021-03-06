@@ -2,20 +2,25 @@ import FormField from '../shared-ui/FormField/FormField';
 import {
   required,
   validPassword,
-  validatePasswords,
   validateEmail,
 } from '../../utils/formValidation';
 import { Form, Field, FieldRenderProps } from 'react-final-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../state/reducers';
-import { signUpUser } from '../../state/action-creators/authActions';
+import { useActions } from '../../hooks/useActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 import './SignUp.css';
+
+interface SignupValues {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password_1: string;
+}
 
 //TODO: Want to add in icon for toggle password visibility and highlight red text if passwords do not match
 const SignUp: React.FC = () => {
-  const dispatch = useDispatch();
-  const auth = useSelector((state: RootState) => state.auth);
-  const onSubmit = (values: any) => {
+  const { signUpUser } = useActions();
+  const auth = useTypedSelector((state) => state.auth);
+  const onSubmit = (values: SignupValues) => {
     const registrationValues = {
       first_name: values.first_name,
       last_name: values.last_name,
@@ -23,8 +28,8 @@ const SignUp: React.FC = () => {
       password: values.password_1,
     };
 
-    // implementation to submit form
-    dispatch(signUpUser(registrationValues));
+    // call action creator to sign user up with form values supplied
+    signUpUser(registrationValues);
   };
 
   return (
@@ -37,11 +42,10 @@ const SignUp: React.FC = () => {
         )}
         <h1 className="text-center text-lg">Sign up for Snapshare</h1>
         <Form
-          validate={validatePasswords}
           onSubmit={onSubmit}
-          render={({ errors, submitting, handleSubmit, pristine }) => {
+          render={({ submitting, handleSubmit, pristine }) => {
             return (
-              <form onSubmit={handleSubmit} className="mt-4">
+              <form onSubmit={handleSubmit} className="mt-4" autoComplete="off">
                 <Field
                   name="first_name"
                   validate={(value) =>
@@ -96,20 +100,6 @@ const SignUp: React.FC = () => {
                       value={props.input.value}
                       onHandleChange={props.input.onChange}>
                       Password
-                    </FormField>
-                  )}
-                </Field>
-                <Field
-                  name="password_2"
-                  validate={(value) => validPassword(value)}>
-                  {(props) => (
-                    <FormField
-                      id="password_2"
-                      type="password"
-                      {...props}
-                      value={props.input.value}
-                      onHandleChange={props.input.onChange}>
-                      Re-enter Password
                     </FormField>
                   )}
                 </Field>

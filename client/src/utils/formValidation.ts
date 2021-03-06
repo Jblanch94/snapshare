@@ -13,13 +13,6 @@ export const validPassword = (value: any): string | undefined => {
   if (!value) return 'Password is required';
 };
 
-export const validatePasswords = (values: any) => {
-  if (values.password_1 !== values.password_2) {
-    return { passwordsMatch: 'Passwords do not match' };
-  }
-  return undefined;
-};
-
 export const required = (value: any, message: string): string | undefined => {
   if (value) return undefined;
   return message;

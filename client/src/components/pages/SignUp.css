@@ -1,6 +1,6 @@
 .signup-section {
   width: 30%;
-  height: 65%;
+  flex: 1 1 1;
 }
 
 @media screen and (max-width: 1200px) {

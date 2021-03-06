@@ -8,6 +8,7 @@ module.exports = {
       white: '#fff',
       formLabel: '#898989',
       error: 'red',
+      link: '#128fdc',
     },
     borderColor: {
       primary: '#fff',

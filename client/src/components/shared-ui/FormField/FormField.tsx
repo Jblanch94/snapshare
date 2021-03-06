@@ -7,6 +7,7 @@ interface FormFieldProps extends FieldRenderProps<any, HTMLElement> {
   children: string;
   onHandleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
+  passwordMatch?: boolean;
 }
 
 const FormField: React.FC<FormFieldProps> = (props) => {

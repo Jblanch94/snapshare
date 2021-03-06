@@ -1,0 +1,16 @@
+.login-section {
+  height: 40%;
+  width: 25%;
+  flex: 0 1 1;
+  max-width: 95%;
+}
+
+@media screen and (max-width: 640px) {
+  #main {
+    background: #fff;
+  }
+
+  #main .login-section {
+    width: 100%;
+  }
+}

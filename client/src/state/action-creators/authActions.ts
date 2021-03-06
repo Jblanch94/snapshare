@@ -25,3 +25,19 @@ export const signUpUser = (
     }
   };
 };
+
+export const loginUser = (
+  formValues: any
+): ThunkAction<void, RootState, unknown, Action<string>> => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await auth.post('/login', formValues);
+      dispatch({
+        type: authTypes.LOGIN_USER,
+        payload: response.data.accessToken,
+      });
+    } catch (err) {
+      dispatch({ type: authTypes.AUTH_ERROR, payload: err.response.data });
+    }
+  };
+};
