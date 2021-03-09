@@ -8,8 +8,11 @@ import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import Navbar from './ui/Navbar';
 import Login from './pages/Login';
-import Explore from './pages/Explore';
-import Profile from './pages/Profile';
+import ExploreContainer from '../containers/ExploreContainer';
+import ProfileContainer from '../containers/ProfileContainer';
+import About from './pages/Profile/About';
+import Favorites from './pages/Profile/Favorites';
+import Albums from './pages/Profile/Albums';
 
 interface RoutesProps {
   authenticated: boolean;
@@ -40,12 +43,56 @@ const Routes: React.FC<RoutesProps> = ({ authenticated }) => {
         />
 
         <Route exact path="/explore">
-          <Explore />
+          <ExploreContainer />
         </Route>
         <Route
           exact
           path="/user"
-          render={() => (authenticated ? <Profile /> : <Redirect to="/" />)}
+          render={() =>
+            authenticated ? <ProfileContainer /> : <Redirect to="/" />
+          }
+        />
+        <Route
+          exact
+          path="/profile/about"
+          render={() =>
+            authenticated ? (
+              <>
+                <ProfileContainer />
+                <About />
+              </>
+            ) : (
+              <Redirect to="/" />
+            )
+          }
+        />
+        <Route
+          exact
+          path="/profile/favorites"
+          render={() =>
+            authenticated ? (
+              <>
+                <ProfileContainer />
+                <Favorites />
+              </>
+            ) : (
+              <Redirect to="/" />
+            )
+          }
+        />
+        <Route
+          exact
+          path="/profile/albums"
+          render={() =>
+            authenticated ? (
+              <>
+                <ProfileContainer />
+                <Albums />
+              </>
+            ) : (
+              <Redirect to="/" />
+            )
+          }
         />
       </Switch>
     </Router>

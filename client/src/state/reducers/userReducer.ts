@@ -1,7 +1,7 @@
 import { userTypes } from '../action-types/userTypes';
 import { UserActions } from '../actions/userActions';
 
-interface UserState {
+export interface UserState {
   loading: boolean;
   error: string | null;
   current_user: {

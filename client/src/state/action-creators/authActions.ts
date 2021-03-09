@@ -49,7 +49,7 @@ export const isAuthenticated = () => {
   const axios = new AxiosUtility(auth);
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get('/is-authenticated');
+      const response = await axios.get('/is-authenticated', {});
       dispatch({ type: authTypes.IS_AUTHENTICATED, payload: response.data });
     } catch (err) {
       // dispatch({ type: authTypes.AUTH_ERROR, payload: err.response.data });
@@ -63,7 +63,7 @@ export const refreshToken = () => {
   const axios = new AxiosUtility(auth);
   return async (dispatch: Dispatch) => {
     try {
-      const response = await axios.get('/refresh-token');
+      const response = await axios.get('/refresh-token', {});
       dispatch({
         type: authTypes.REFRESH_TOKEN,
         payload: response.data.accessToken,

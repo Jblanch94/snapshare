@@ -20,6 +20,7 @@ module.exports = {
       backgroundImage: (theme) => ({
         hero: "url('/src/assets/home-hero.jpg')",
         signUp: "url('/src/assets/sign-up.jpg')",
+        profileCover: "url('/src/assets/cover-photo.jpg')",
       }),
     },
   },

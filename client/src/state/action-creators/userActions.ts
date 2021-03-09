@@ -17,26 +17,12 @@ export const fetchUser = (): ThunkAction<
     const axios = new AxiosUtility(user);
     try {
       dispatch({ type: userTypes.LOADING });
-      const response = await axios.get('/');
+      const response = await axios.get('/', {});
       dispatch({ type: userTypes.FETCH_USER, payload: response.data });
       dispatch({ type: userTypes.FETCH_USER_SUCCESS });
     } catch (err) {
       console.error(err.message);
     }
-  };
-};
-
-// action creator that updates the loading status
-export const loading = () => {
-  return {
-    type: userTypes.LOADING,
-  };
-};
-
-// action creator that emits the fetching of the user is complete
-export const fetchUserSuccessful = () => {
-  return {
-    type: userTypes.FETCH_USER_SUCCESS,
   };
 };
 

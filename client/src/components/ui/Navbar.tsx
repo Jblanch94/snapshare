@@ -73,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ authenticated }) => {
     );
   }
   return (
-    <header className="flex justify-between items-center px-64 py-2 bg-black bg-opacity-70 text-primary fixed top-0 left-0 right-0">
+    <header className="flex justify-between items-center px-64 py-2 bg-black bg-opacity-70 text-primary top-0 left-0 right-0">
       <h1 className="text-4xl font-bold tracking-wide cursor-pointer hover:text-secondary uppercase transition duration-500 ease-in-out">
         Snapshare
       </h1>
